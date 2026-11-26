@@ -1,5 +1,5 @@
 @echo off
-REM Usage: run_daily.bat [start|finish]   (no argument = start)
+REM Usage: run_daily.bat [start|finish|extra]   (no argument = start)
 cd /d "%~dp0"
 set PYTHONIOENCODING=utf-8
 set MODE=%1

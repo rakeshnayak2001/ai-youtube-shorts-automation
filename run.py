@@ -5,6 +5,7 @@ Daily (scheduled):
                                     #          or, if no account has credits, make today's stickman video
     python run.py --daily-finish    # 4:30 PM: render + upload the film whose clips are ready;
                                     #          if the clips aren't ready, make a stickman video instead
+    python run.py --daily-extra     # one-off extra video (finish a ready film, else stickman)
     (the Claude scheduled task at 2:20 PM generates the film's clips in Google Flow in between)
 
 Manual:
@@ -147,11 +148,24 @@ def daily_finish(do_upload=True, fake_voice=False):
     mark_todays_video(slug, "stickman")
 
 
+def daily_extra(do_upload=True, fake_voice=False):
+    """One-off extra video (doesn't use up today's daily slot): finish a film whose clips are ready,
+    otherwise make a stickman video."""
+    ready, _ = pending_films()
+    if ready:
+        print(f"\n== extra video: finishing film {ready[0]}")
+        finish(ready[0], do_upload, fake_voice)
+        return
+    print("\n== extra video: no film ready, making a stickman video")
+    make_stickman(do_upload, fake_voice)
+
+
 # ---------------------------------------------------------------- CLI
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--daily-start", action="store_true")
     ap.add_argument("--daily-finish", action="store_true")
+    ap.add_argument("--daily-extra", action="store_true", help="one-off extra video (not counted as today's)")
     ap.add_argument("--topic")
     ap.add_argument("--slug")
     ap.add_argument("--format", choices=["cinematic", "stickman", "facts"])
@@ -165,6 +179,8 @@ def main():
             daily_start(up, a.fake_voice)
         elif a.daily_finish:
             daily_finish(up, a.fake_voice)
+        elif a.daily_extra:
+            daily_extra(up, a.fake_voice)
         elif a.slug:
             from film import clip_status
             script = read_json(video_dir(a.slug) / "script.json")
