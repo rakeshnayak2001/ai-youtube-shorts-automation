@@ -10,6 +10,26 @@
 AI shorts generator, text to video, Veo 3, Google Flow, Claude Code, Remotion, edge-tts, Instagram Reels automation,
 Indian mythology videos, stickman animation.
 
+<p align="center">
+  <img src="docs/images/cinematic-veo-shorts.jpg" alt="AI YouTube Shorts automation: cinematic AI video made with Google Veo 3.1, with automatic title card and word-by-word captions" width="760">
+</p>
+
+## How it works
+
+<p align="center">
+  <img src="docs/images/pipeline.svg" alt="Daily YouTube Shorts automation pipeline: timely topic, Flow credit check, Veo film or stickman fallback, Remotion render, YouTube upload" width="900">
+</p>
+
+## Video formats
+
+<p align="center">
+  <img src="docs/images/formats.jpg" alt="Three AI video formats: cinematic Veo film, free stickman animation and motion-graphics facts video" width="900">
+</p>
+
+<p align="center">
+  <img src="docs/images/stickman-scenes.jpg" alt="Stickman story video frames generated in code with Remotion: same character in different scenes, captions and labels" width="900">
+</p>
+
 
 **Current format: cinematic AI films** (`config.json → video.format = "cinematic"`). Claude writes a story
 with a fixed look for each character and a shot list. Each 8-second shot is generated with Google's video models
