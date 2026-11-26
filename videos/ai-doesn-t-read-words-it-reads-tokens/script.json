@@ -1,0 +1,17 @@
+{
+  "slug": "ai-doesn-t-read-words-it-reads-tokens",
+  "topic": "What is a token? How AI actually reads your words",
+  "title": "AI Doesn't Read Words. It Reads Tokens.",
+  "description": "Every chatbot splits your message into tokens before it reads it. Here's what a token is and why it decides your limits and costs.",
+  "tags": ["ai", "chatgpt", "tokens", "llm", "tech explained", "artificial intelligence"],
+  "sources": ["OpenAI Help Center: What are tokens and how to count them"],
+  "scenes": [
+    {"type": "hook", "heading": "AI can't read words", "narration": "AI chatbots don't actually read your words. They read tokens."},
+    {"type": "text", "heading": "So what's a token?", "body": "A small chunk of text: a word, part of a word, or a symbol", "narration": "A token is a small chunk of text. Sometimes a whole word, sometimes part of one, sometimes just a comma."},
+    {"type": "list", "heading": "\"unbelievable\" →", "items": ["un", "believ", "able"], "narration": "A long word like unbelievable can get split into pieces, like un, believ, and able."},
+    {"type": "stat", "value": "≈4", "label": "characters per token in English", "narration": "In English, one token is roughly four characters, or about three quarters of a word."},
+    {"type": "bars", "heading": "100 English words ≈", "data": [{"label": "Words", "value": 100}, {"label": "Tokens", "value": 133}], "narration": "So a hundred words is around a hundred and thirty tokens."},
+    {"type": "text", "heading": "Why it matters", "body": "Chat limits, memory and API prices are counted in tokens", "narration": "And that matters, because chat limits, memory, and API pricing are all counted in tokens, not words."},
+    {"type": "outro", "heading": "Tokens, not words", "narration": "Now you know how AI really reads. Follow for more tech, explained simply."}
+  ]
+}

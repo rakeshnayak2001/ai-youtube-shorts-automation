@@ -1,0 +1,19 @@
+# dependencies / build output
+node_modules/
+__pycache__/
+out/
+public/audio/
+public/films/
+
+# per-machine state and secrets (never commit)
+state/
+secrets/
+.env
+
+# generated per video
+videos/*/voice_parts/
+videos/*/clips/
+videos/*/characters/
+videos/*/props.json
+videos/*/timings.json
+*.tmp

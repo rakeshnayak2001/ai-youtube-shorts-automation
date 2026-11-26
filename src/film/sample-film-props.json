@@ -1,0 +1,960 @@
+{
+ "script": {
+  "slug": "barbarika-the-warrior-who-could-end-the-mahabharata-war",
+  "format": "cinematic",
+  "topic": "Barbarika: the warrior who could have ended the Mahabharata war in one minute",
+  "title": "The Warrior Who Could End the Mahabharata War With 3 Arrows",
+  "description": "Barbarika, grandson of Bhima, needed only three arrows to end Kurukshetra. So why did Krishna ask for his head? An untold story from the Skanda Purana and the Khatu Shyam tradition.",
+  "tags": [
+   "mahabharata",
+   "barbarika",
+   "khatu shyam",
+   "krishna",
+   "indian mythology",
+   "untold stories",
+   "hindu mythology"
+  ],
+  "sources": [
+   "Skanda Purana, Maheshvara Khanda (Kaumarika Khanda): the story of Barbarika",
+   "Khatu Shyam Temple tradition, Sikar, Rajasthan"
+  ],
+  "style": "Cinematic photoreal epic set in ancient India, golden-hour light and drifting mist, warm amber and deep teal palette, 35mm anamorphic lens, shallow depth of field, subtle film grain, slow deliberate camera movement",
+  "characters": [
+   {
+    "id": "barbarika",
+    "name": "Barbarika",
+    "look": "a young warrior in his early twenties, tall and muscular, dark brown skin, long black hair tied in a high top knot, thin moustache, bare chest with a gold armband, a red and gold dhoti, a dark leather quiver holding exactly three arrows with glowing golden tips, and a large black wooden bow"
+   },
+   {
+    "id": "brahmin",
+    "name": "The old Brahmin",
+    "look": "an old wandering Brahmin seen only from behind or in silhouette, saffron robes, a white shawl, a tall wooden staff, a single peacock feather tucked into his hair; his face is never shown"
+   }
+  ],
+  "scenes": [
+   {
+    "type": "shot",
+    "seconds": 8,
+    "characters": [
+     "barbarika"
+    ],
+    "narration": "Three arrows. That's all one warrior needed to end the greatest war in history.",
+    "visual": "Extreme close-up of three arrows with glowing golden tips in a dark leather quiver on a warrior's back, the warrior standing still on a misty ridge",
+    "camera": "slow push-in on the arrow tips, then rack focus to the misty battlefield far below",
+    "sound": "low wind, a deep ominous drum beat"
+   },
+   {
+    "type": "shot",
+    "seconds": 8,
+    "characters": [],
+    "narration": "Kurukshetra. Two vast armies, waiting for the war that would decide everything.",
+    "visual": "Vast aerial view of two enormous ancient armies facing each other across a dusty plain at dawn, chariots, elephants and banners, dust rising",
+    "camera": "high aerial drone shot gliding forward between the armies",
+    "sound": "conch shells in the distance, wind, horses"
+   },
+   {
+    "type": "shot",
+    "seconds": 8,
+    "characters": [
+     "barbarika"
+    ],
+    "narration": "And walking towards it was Barbarika, grandson of Bhima, carrying Shiva's boon: arrows that never miss.",
+    "visual": "Barbarika walks alone along a dusty forest path towards the distant battlefield, bow in hand, sunbeams through trees",
+    "camera": "wide tracking shot from the side, slowly moving with him",
+    "sound": "footsteps on dry leaves, birds, soft wind"
+   },
+   {
+    "type": "shot",
+    "seconds": 8,
+    "characters": [
+     "barbarika",
+     "brahmin"
+    ],
+    "narration": "Under a peepal tree, an old Brahmin stopped him and laughed. Three arrows, for an entire war?",
+    "visual": "Under a giant peepal tree, the old Brahmin, seen from behind, blocks the path with his staff; Barbarika stops and looks at him",
+    "camera": "over-the-shoulder shot from behind the Brahmin towards Barbarika",
+    "sound": "rustling leaves, a soft chuckle-like breeze, birds"
+   },
+   {
+    "type": "shot",
+    "seconds": 8,
+    "characters": [
+     "barbarika"
+    ],
+    "narration": "Barbarika released one arrow. It flew through the tree and marked every single leaf.",
+    "visual": "Barbarika draws his bow and releases one golden arrow; it streaks through the branches of the giant peepal tree, and every leaf begins to glow with a tiny golden mark",
+    "camera": "low angle, slow motion as the arrow leaves the bow, then tilt up into the glowing tree",
+    "sound": "bowstring twang, whoosh, a shimmering magical chime"
+   },
+   {
+    "type": "shot",
+    "seconds": 6,
+    "characters": [
+     "brahmin"
+    ],
+    "narration": "Then it circled the Brahmin's foot. He had hidden one leaf beneath it.",
+    "visual": "Close-up at ground level: a glowing golden arrow hovers and circles a bare foot pressed on a single green peepal leaf, saffron robe hem visible",
+    "camera": "ground-level macro shot, the arrow circling slowly",
+    "sound": "a soft humming whoosh, leaves rustling"
+   },
+   {
+    "type": "shot",
+    "seconds": 8,
+    "characters": [
+     "barbarika"
+    ],
+    "narration": "",
+    "dialogue": "I made a vow. I always fight for the weaker side.",
+    "visual": "Night. Barbarika sits by a small campfire, firelight on his face, looking up proudly as he speaks",
+    "camera": "medium close-up, slow push-in",
+    "sound": "crackling fire, crickets"
+   },
+   {
+    "type": "shot",
+    "seconds": 8,
+    "characters": [
+     "brahmin"
+    ],
+    "narration": "That was the problem. Whichever side he joined would become stronger, so he'd have to switch forever.",
+    "visual": "The Brahmin's silhouette stands on a hill against a red sunset, looking down at the two armies; the light shifts back and forth between the two sides",
+    "camera": "slow orbit around the silhouette",
+    "sound": "deep low tension drone, distant wind"
+   },
+   {
+    "type": "shot",
+    "seconds": 8,
+    "characters": [
+     "barbarika"
+    ],
+    "narration": "So the Brahmin, Krishna in disguise, asked for one gift: his head. Barbarika agreed.",
+    "visual": "Barbarika kneels with his head bowed and hands joined in golden divine light, a single peacock feather slowly floating down in front of him",
+    "camera": "slow crane down from above to eye level",
+    "sound": "a single temple bell, soft choir hum"
+   },
+   {
+    "type": "shot",
+    "seconds": 8,
+    "characters": [],
+    "narration": "From a hilltop, he watched all eighteen days. Asked who won, he said: only Krishna's chakra.",
+    "visual": "From a high hilltop marked with a marigold-garlanded stone, the view over a vast smoky battlefield at dusk with fallen banners; a spinning golden disc of light glows in the clouds above",
+    "camera": "slow pull-back from the marigold stone to reveal the battlefield",
+    "sound": "distant battle echoes fading into silence"
+   },
+   {
+    "type": "shot",
+    "seconds": 8,
+    "characters": [],
+    "narration": "Today, millions worship him as Khatu Shyam in Rajasthan. Follow for more untold stories.",
+    "visual": "A beautiful temple in Rajasthan at night, glowing with hundreds of oil lamps and marigold garlands, devotees seen from behind holding diyas",
+    "camera": "slow forward glide towards the glowing temple entrance",
+    "sound": "temple bells, soft devotional music, crowd murmur"
+   }
+  ]
+ },
+ "timings": {
+  "total": 89.676,
+  "scenes": [
+   {
+    "start": 0.0,
+    "duration": 8.052
+   },
+   {
+    "start": 8.052,
+    "duration": 8.052
+   },
+   {
+    "start": 16.104,
+    "duration": 8.604
+   },
+   {
+    "start": 24.708,
+    "duration": 8.7
+   },
+   {
+    "start": 33.408,
+    "duration": 8.052
+   },
+   {
+    "start": 41.46,
+    "duration": 6.54
+   },
+   {
+    "start": 48.0,
+    "duration": 8.364
+   },
+   {
+    "start": 56.364,
+    "duration": 8.772
+   },
+   {
+    "start": 65.136,
+    "duration": 8.052
+   },
+   {
+    "start": 73.188,
+    "duration": 8.436
+   },
+   {
+    "start": 81.624,
+    "duration": 8.052
+   }
+  ],
+  "words": [
+   {
+    "text": "Three",
+    "start": 0.15,
+    "end": 0.545
+   },
+   {
+    "text": "arrows.",
+    "start": 0.595,
+    "end": 1.06
+   },
+   {
+    "text": "That's",
+    "start": 1.31,
+    "end": 1.74
+   },
+   {
+    "text": "all",
+    "start": 1.79,
+    "end": 2.115
+   },
+   {
+    "text": "one",
+    "start": 2.165,
+    "end": 2.49
+   },
+   {
+    "text": "warrior",
+    "start": 2.54,
+    "end": 3.005
+   },
+   {
+    "text": "needed",
+    "start": 3.055,
+    "end": 3.485
+   },
+   {
+    "text": "to",
+    "start": 3.535,
+    "end": 3.825
+   },
+   {
+    "text": "end",
+    "start": 3.875,
+    "end": 4.2
+   },
+   {
+    "text": "the",
+    "start": 4.25,
+    "end": 4.575
+   },
+   {
+    "text": "greatest",
+    "start": 4.625,
+    "end": 5.125
+   },
+   {
+    "text": "war",
+    "start": 5.175,
+    "end": 5.5
+   },
+   {
+    "text": "in",
+    "start": 5.55,
+    "end": 5.84
+   },
+   {
+    "text": "history.",
+    "start": 5.89,
+    "end": 6.39
+   },
+   {
+    "text": "Kurukshetra.",
+    "start": 8.202,
+    "end": 8.842
+   },
+   {
+    "text": "Two",
+    "start": 9.092,
+    "end": 9.417
+   },
+   {
+    "text": "vast",
+    "start": 9.467,
+    "end": 9.827
+   },
+   {
+    "text": "armies,",
+    "start": 9.877,
+    "end": 10.342
+   },
+   {
+    "text": "waiting",
+    "start": 10.592,
+    "end": 11.057
+   },
+   {
+    "text": "for",
+    "start": 11.107,
+    "end": 11.432
+   },
+   {
+    "text": "the",
+    "start": 11.482,
+    "end": 11.807
+   },
+   {
+    "text": "war",
+    "start": 11.857,
+    "end": 12.182
+   },
+   {
+    "text": "that",
+    "start": 12.232,
+    "end": 12.592
+   },
+   {
+    "text": "would",
+    "start": 12.642,
+    "end": 13.037
+   },
+   {
+    "text": "decide",
+    "start": 13.087,
+    "end": 13.517
+   },
+   {
+    "text": "everything.",
+    "start": 13.567,
+    "end": 14.172
+   },
+   {
+    "text": "And",
+    "start": 16.254,
+    "end": 16.579
+   },
+   {
+    "text": "walking",
+    "start": 16.629,
+    "end": 17.094
+   },
+   {
+    "text": "towards",
+    "start": 17.144,
+    "end": 17.609
+   },
+   {
+    "text": "it",
+    "start": 17.659,
+    "end": 17.949
+   },
+   {
+    "text": "was",
+    "start": 17.999,
+    "end": 18.324
+   },
+   {
+    "text": "Barbarika,",
+    "start": 18.374,
+    "end": 18.944
+   },
+   {
+    "text": "grandson",
+    "start": 19.194,
+    "end": 19.694
+   },
+   {
+    "text": "of",
+    "start": 19.744,
+    "end": 20.034
+   },
+   {
+    "text": "Bhima,",
+    "start": 20.084,
+    "end": 20.514
+   },
+   {
+    "text": "carrying",
+    "start": 20.764,
+    "end": 21.264
+   },
+   {
+    "text": "Shiva's",
+    "start": 21.314,
+    "end": 21.779
+   },
+   {
+    "text": "boon:",
+    "start": 21.829,
+    "end": 22.224
+   },
+   {
+    "text": "arrows",
+    "start": 22.274,
+    "end": 22.704
+   },
+   {
+    "text": "that",
+    "start": 22.754,
+    "end": 23.114
+   },
+   {
+    "text": "never",
+    "start": 23.164,
+    "end": 23.559
+   },
+   {
+    "text": "miss.",
+    "start": 23.609,
+    "end": 24.004
+   },
+   {
+    "text": "Under",
+    "start": 24.858,
+    "end": 25.253
+   },
+   {
+    "text": "a",
+    "start": 25.303,
+    "end": 25.558
+   },
+   {
+    "text": "peepal",
+    "start": 25.608,
+    "end": 26.038
+   },
+   {
+    "text": "tree,",
+    "start": 26.088,
+    "end": 26.483
+   },
+   {
+    "text": "an",
+    "start": 26.733,
+    "end": 27.023
+   },
+   {
+    "text": "old",
+    "start": 27.073,
+    "end": 27.398
+   },
+   {
+    "text": "Brahmin",
+    "start": 27.448,
+    "end": 27.913
+   },
+   {
+    "text": "stopped",
+    "start": 27.963,
+    "end": 28.428
+   },
+   {
+    "text": "him",
+    "start": 28.478,
+    "end": 28.803
+   },
+   {
+    "text": "and",
+    "start": 28.853,
+    "end": 29.178
+   },
+   {
+    "text": "laughed.",
+    "start": 29.228,
+    "end": 29.728
+   },
+   {
+    "text": "Three",
+    "start": 29.978,
+    "end": 30.373
+   },
+   {
+    "text": "arrows,",
+    "start": 30.423,
+    "end": 30.888
+   },
+   {
+    "text": "for",
+    "start": 31.138,
+    "end": 31.463
+   },
+   {
+    "text": "an",
+    "start": 31.513,
+    "end": 31.803
+   },
+   {
+    "text": "entire",
+    "start": 31.853,
+    "end": 32.283
+   },
+   {
+    "text": "war?",
+    "start": 32.333,
+    "end": 32.693
+   },
+   {
+    "text": "Barbarika",
+    "start": 33.558,
+    "end": 34.093
+   },
+   {
+    "text": "released",
+    "start": 34.143,
+    "end": 34.643
+   },
+   {
+    "text": "one",
+    "start": 34.693,
+    "end": 35.018
+   },
+   {
+    "text": "arrow.",
+    "start": 35.068,
+    "end": 35.498
+   },
+   {
+    "text": "It",
+    "start": 35.748,
+    "end": 36.038
+   },
+   {
+    "text": "flew",
+    "start": 36.088,
+    "end": 36.448
+   },
+   {
+    "text": "through",
+    "start": 36.498,
+    "end": 36.963
+   },
+   {
+    "text": "the",
+    "start": 37.013,
+    "end": 37.338
+   },
+   {
+    "text": "tree",
+    "start": 37.388,
+    "end": 37.748
+   },
+   {
+    "text": "and",
+    "start": 37.798,
+    "end": 38.123
+   },
+   {
+    "text": "marked",
+    "start": 38.173,
+    "end": 38.603
+   },
+   {
+    "text": "every",
+    "start": 38.653,
+    "end": 39.048
+   },
+   {
+    "text": "single",
+    "start": 39.098,
+    "end": 39.528
+   },
+   {
+    "text": "leaf.",
+    "start": 39.578,
+    "end": 39.973
+   },
+   {
+    "text": "Then",
+    "start": 41.61,
+    "end": 41.97
+   },
+   {
+    "text": "it",
+    "start": 42.02,
+    "end": 42.31
+   },
+   {
+    "text": "circled",
+    "start": 42.36,
+    "end": 42.825
+   },
+   {
+    "text": "the",
+    "start": 42.875,
+    "end": 43.2
+   },
+   {
+    "text": "Brahmin's",
+    "start": 43.25,
+    "end": 43.785
+   },
+   {
+    "text": "foot.",
+    "start": 43.835,
+    "end": 44.23
+   },
+   {
+    "text": "He",
+    "start": 44.48,
+    "end": 44.77
+   },
+   {
+    "text": "had",
+    "start": 44.82,
+    "end": 45.145
+   },
+   {
+    "text": "hidden",
+    "start": 45.195,
+    "end": 45.625
+   },
+   {
+    "text": "one",
+    "start": 45.675,
+    "end": 46.0
+   },
+   {
+    "text": "leaf",
+    "start": 46.05,
+    "end": 46.41
+   },
+   {
+    "text": "beneath",
+    "start": 46.46,
+    "end": 46.925
+   },
+   {
+    "text": "it.",
+    "start": 46.975,
+    "end": 47.3
+   },
+   {
+    "text": "That",
+    "start": 56.514,
+    "end": 56.874
+   },
+   {
+    "text": "was",
+    "start": 56.924,
+    "end": 57.249
+   },
+   {
+    "text": "the",
+    "start": 57.299,
+    "end": 57.624
+   },
+   {
+    "text": "problem.",
+    "start": 57.674,
+    "end": 58.174
+   },
+   {
+    "text": "Whichever",
+    "start": 58.424,
+    "end": 58.959
+   },
+   {
+    "text": "side",
+    "start": 59.009,
+    "end": 59.369
+   },
+   {
+    "text": "he",
+    "start": 59.419,
+    "end": 59.709
+   },
+   {
+    "text": "joined",
+    "start": 59.759,
+    "end": 60.189
+   },
+   {
+    "text": "would",
+    "start": 60.239,
+    "end": 60.634
+   },
+   {
+    "text": "become",
+    "start": 60.684,
+    "end": 61.114
+   },
+   {
+    "text": "stronger,",
+    "start": 61.164,
+    "end": 61.699
+   },
+   {
+    "text": "so",
+    "start": 61.949,
+    "end": 62.239
+   },
+   {
+    "text": "he'd",
+    "start": 62.289,
+    "end": 62.649
+   },
+   {
+    "text": "have",
+    "start": 62.699,
+    "end": 63.059
+   },
+   {
+    "text": "to",
+    "start": 63.109,
+    "end": 63.399
+   },
+   {
+    "text": "switch",
+    "start": 63.449,
+    "end": 63.879
+   },
+   {
+    "text": "forever.",
+    "start": 63.929,
+    "end": 64.429
+   },
+   {
+    "text": "So",
+    "start": 65.286,
+    "end": 65.576
+   },
+   {
+    "text": "the",
+    "start": 65.626,
+    "end": 65.951
+   },
+   {
+    "text": "Brahmin,",
+    "start": 66.001,
+    "end": 66.501
+   },
+   {
+    "text": "Krishna",
+    "start": 66.751,
+    "end": 67.216
+   },
+   {
+    "text": "in",
+    "start": 67.266,
+    "end": 67.556
+   },
+   {
+    "text": "disguise,",
+    "start": 67.606,
+    "end": 68.141
+   },
+   {
+    "text": "asked",
+    "start": 68.391,
+    "end": 68.786
+   },
+   {
+    "text": "for",
+    "start": 68.836,
+    "end": 69.161
+   },
+   {
+    "text": "one",
+    "start": 69.211,
+    "end": 69.536
+   },
+   {
+    "text": "gift:",
+    "start": 69.586,
+    "end": 69.981
+   },
+   {
+    "text": "his",
+    "start": 70.031,
+    "end": 70.356
+   },
+   {
+    "text": "head.",
+    "start": 70.406,
+    "end": 70.801
+   },
+   {
+    "text": "Barbarika",
+    "start": 71.051,
+    "end": 71.586
+   },
+   {
+    "text": "agreed.",
+    "start": 71.636,
+    "end": 72.101
+   },
+   {
+    "text": "From",
+    "start": 73.338,
+    "end": 73.698
+   },
+   {
+    "text": "a",
+    "start": 73.748,
+    "end": 74.003
+   },
+   {
+    "text": "hilltop,",
+    "start": 74.053,
+    "end": 74.553
+   },
+   {
+    "text": "he",
+    "start": 74.803,
+    "end": 75.093
+   },
+   {
+    "text": "watched",
+    "start": 75.143,
+    "end": 75.608
+   },
+   {
+    "text": "all",
+    "start": 75.658,
+    "end": 75.983
+   },
+   {
+    "text": "eighteen",
+    "start": 76.033,
+    "end": 76.533
+   },
+   {
+    "text": "days.",
+    "start": 76.583,
+    "end": 76.978
+   },
+   {
+    "text": "Asked",
+    "start": 77.228,
+    "end": 77.623
+   },
+   {
+    "text": "who",
+    "start": 77.673,
+    "end": 77.998
+   },
+   {
+    "text": "won,",
+    "start": 78.048,
+    "end": 78.408
+   },
+   {
+    "text": "he",
+    "start": 78.658,
+    "end": 78.948
+   },
+   {
+    "text": "said:",
+    "start": 78.998,
+    "end": 79.393
+   },
+   {
+    "text": "only",
+    "start": 79.443,
+    "end": 79.803
+   },
+   {
+    "text": "Krishna's",
+    "start": 79.853,
+    "end": 80.388
+   },
+   {
+    "text": "chakra.",
+    "start": 80.438,
+    "end": 80.903
+   },
+   {
+    "text": "Today,",
+    "start": 81.774,
+    "end": 82.204
+   },
+   {
+    "text": "millions",
+    "start": 82.454,
+    "end": 82.954
+   },
+   {
+    "text": "worship",
+    "start": 83.004,
+    "end": 83.469
+   },
+   {
+    "text": "him",
+    "start": 83.519,
+    "end": 83.844
+   },
+   {
+    "text": "as",
+    "start": 83.894,
+    "end": 84.184
+   },
+   {
+    "text": "Khatu",
+    "start": 84.234,
+    "end": 84.629
+   },
+   {
+    "text": "Shyam",
+    "start": 84.679,
+    "end": 85.074
+   },
+   {
+    "text": "in",
+    "start": 85.124,
+    "end": 85.414
+   },
+   {
+    "text": "Rajasthan.",
+    "start": 85.464,
+    "end": 86.034
+   },
+   {
+    "text": "Follow",
+    "start": 86.284,
+    "end": 86.714
+   },
+   {
+    "text": "for",
+    "start": 86.764,
+    "end": 87.089
+   },
+   {
+    "text": "more",
+    "start": 87.139,
+    "end": 87.499
+   },
+   {
+    "text": "untold",
+    "start": 87.549,
+    "end": 87.979
+   },
+   {
+    "text": "stories.",
+    "start": 88.029,
+    "end": 88.529
+   }
+  ]
+ },
+ "audioSrc": null,
+ "theme": {
+  "accent": "#E9B44C"
+ },
+ "film": {
+  "clips": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "clipVolume": 0.3
+ }
+}

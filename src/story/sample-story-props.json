@@ -1,0 +1,919 @@
+{
+ "script": {
+  "slug": "why-does-a-week-have-7-days",
+  "format": "stickman",
+  "topic": "Why does a week have 7 days?",
+  "title": "Why Does a Week Have 7 Days?",
+  "description": "No planet spins in 7 days, yet the whole world uses a 7-day week. The answer is written in the ancient night sky.",
+  "tags": [
+   "history",
+   "ancient history",
+   "week",
+   "calendar",
+   "babylon",
+   "stickman",
+   "explained"
+  ],
+  "sources": [
+   "Encyclopaedia Britannica: Week",
+   "Encyclopaedia Britannica: Calendar - The seven-day week"
+  ],
+  "scenes": [
+   {
+    "type": "story",
+    "setting": "field",
+    "time": "night",
+    "pose": "look_up",
+    "mood": "surprised",
+    "label": "Thousands of years ago",
+    "narration": "Thousands of years ago, a farmer stared at the night sky and noticed the Moon was changing shape."
+   },
+   {
+    "type": "question",
+    "setting": "field",
+    "time": "night",
+    "question": "Why does a week have 7 days?",
+    "narration": "So why does every week, everywhere, have exactly seven days?"
+   },
+   {
+    "type": "story",
+    "setting": "village",
+    "time": "day",
+    "pose": "walk",
+    "mood": "neutral",
+    "hold": "stick",
+    "narration": "Meet Tiko. He needs to know when to plant, when to trade and when to rest. But there are no calendars."
+   },
+   {
+    "type": "story",
+    "setting": "field",
+    "time": "night",
+    "pose": "point",
+    "mood": "happy",
+    "overhead": "lightbulb",
+    "narration": "So he watches the Moon. New, half, full, half again. Each change takes about seven days."
+   },
+   {
+    "type": "story",
+    "setting": "mountains",
+    "time": "night",
+    "pose": "look_up",
+    "mood": "surprised",
+    "label": "7 moving lights",
+    "narration": "Then he notices seven bright lights that wander across the sky: the Sun, the Moon and five planets."
+   },
+   {
+    "type": "story",
+    "setting": "market",
+    "time": "day",
+    "pose": "shrug",
+    "mood": "angry",
+    "crowd": 3,
+    "props": [
+     "coins"
+    ],
+    "narration": "But every town counts days its own way. Market day here is rest day there. Trading turns into chaos."
+   },
+   {
+    "type": "story",
+    "setting": "village",
+    "time": "dusk",
+    "pose": "cheer",
+    "mood": "happy",
+    "crowd": 2,
+    "narration": "The seven-day idea wins. It spreads from Babylon, through Jewish tradition, all the way to Rome."
+   },
+   {
+    "type": "story",
+    "setting": "room",
+    "time": "day",
+    "pose": "point",
+    "mood": "happy",
+    "label": "Sun-day, Moon-day",
+    "props": [
+     "clock"
+    ],
+    "narration": "That's why we still say Sunday and Monday: the Sun's day and the Moon's day."
+   },
+   {
+    "type": "story",
+    "setting": "campfire",
+    "time": "night",
+    "pose": "sit",
+    "mood": "happy",
+    "narration": "So every week is a tiny map of the ancient sky. Follow for more stories of how things began."
+   }
+  ]
+ },
+ "timings": {
+  "total": 74.802,
+  "scenes": [
+   {
+    "start": 0.0,
+    "duration": 8.626
+   },
+   {
+    "start": 8.626,
+    "duration": 5.65
+   },
+   {
+    "start": 14.276,
+    "duration": 9.898
+   },
+   {
+    "start": 24.174,
+    "duration": 8.626
+   },
+   {
+    "start": 32.8,
+    "duration": 8.698
+   },
+   {
+    "start": 41.498,
+    "duration": 9.154
+   },
+   {
+    "start": 50.652,
+    "duration": 8.506
+   },
+   {
+    "start": 59.158,
+    "duration": 6.97
+   },
+   {
+    "start": 66.128,
+    "duration": 8.674
+   }
+  ],
+  "words": [
+   {
+    "text": "Thousands",
+    "start": 0.15,
+    "end": 0.685
+   },
+   {
+    "text": "of",
+    "start": 0.735,
+    "end": 1.025
+   },
+   {
+    "text": "years",
+    "start": 1.075,
+    "end": 1.47
+   },
+   {
+    "text": "ago,",
+    "start": 1.52,
+    "end": 1.88
+   },
+   {
+    "text": "a",
+    "start": 2.13,
+    "end": 2.385
+   },
+   {
+    "text": "farmer",
+    "start": 2.435,
+    "end": 2.865
+   },
+   {
+    "text": "stared",
+    "start": 2.915,
+    "end": 3.345
+   },
+   {
+    "text": "at",
+    "start": 3.395,
+    "end": 3.685
+   },
+   {
+    "text": "the",
+    "start": 3.735,
+    "end": 4.06
+   },
+   {
+    "text": "night",
+    "start": 4.11,
+    "end": 4.505
+   },
+   {
+    "text": "sky",
+    "start": 4.555,
+    "end": 4.88
+   },
+   {
+    "text": "and",
+    "start": 4.93,
+    "end": 5.255
+   },
+   {
+    "text": "noticed",
+    "start": 5.305,
+    "end": 5.77
+   },
+   {
+    "text": "the",
+    "start": 5.82,
+    "end": 6.145
+   },
+   {
+    "text": "Moon",
+    "start": 6.195,
+    "end": 6.555
+   },
+   {
+    "text": "was",
+    "start": 6.605,
+    "end": 6.93
+   },
+   {
+    "text": "changing",
+    "start": 6.98,
+    "end": 7.48
+   },
+   {
+    "text": "shape.",
+    "start": 7.53,
+    "end": 7.96
+   },
+   {
+    "text": "So",
+    "start": 8.776,
+    "end": 9.066
+   },
+   {
+    "text": "why",
+    "start": 9.116,
+    "end": 9.441
+   },
+   {
+    "text": "does",
+    "start": 9.491,
+    "end": 9.851
+   },
+   {
+    "text": "every",
+    "start": 9.901,
+    "end": 10.296
+   },
+   {
+    "text": "week,",
+    "start": 10.346,
+    "end": 10.741
+   },
+   {
+    "text": "everywhere,",
+    "start": 10.991,
+    "end": 11.596
+   },
+   {
+    "text": "have",
+    "start": 11.846,
+    "end": 12.206
+   },
+   {
+    "text": "exactly",
+    "start": 12.256,
+    "end": 12.721
+   },
+   {
+    "text": "seven",
+    "start": 12.771,
+    "end": 13.166
+   },
+   {
+    "text": "days?",
+    "start": 13.216,
+    "end": 13.611
+   },
+   {
+    "text": "Meet",
+    "start": 14.426,
+    "end": 14.786
+   },
+   {
+    "text": "Tiko.",
+    "start": 14.836,
+    "end": 15.231
+   },
+   {
+    "text": "He",
+    "start": 15.481,
+    "end": 15.771
+   },
+   {
+    "text": "needs",
+    "start": 15.821,
+    "end": 16.216
+   },
+   {
+    "text": "to",
+    "start": 16.266,
+    "end": 16.556
+   },
+   {
+    "text": "know",
+    "start": 16.606,
+    "end": 16.966
+   },
+   {
+    "text": "when",
+    "start": 17.016,
+    "end": 17.376
+   },
+   {
+    "text": "to",
+    "start": 17.426,
+    "end": 17.716
+   },
+   {
+    "text": "plant,",
+    "start": 17.766,
+    "end": 18.196
+   },
+   {
+    "text": "when",
+    "start": 18.446,
+    "end": 18.806
+   },
+   {
+    "text": "to",
+    "start": 18.856,
+    "end": 19.146
+   },
+   {
+    "text": "trade",
+    "start": 19.196,
+    "end": 19.591
+   },
+   {
+    "text": "and",
+    "start": 19.641,
+    "end": 19.966
+   },
+   {
+    "text": "when",
+    "start": 20.016,
+    "end": 20.376
+   },
+   {
+    "text": "to",
+    "start": 20.426,
+    "end": 20.716
+   },
+   {
+    "text": "rest.",
+    "start": 20.766,
+    "end": 21.161
+   },
+   {
+    "text": "But",
+    "start": 21.411,
+    "end": 21.736
+   },
+   {
+    "text": "there",
+    "start": 21.786,
+    "end": 22.181
+   },
+   {
+    "text": "are",
+    "start": 22.231,
+    "end": 22.556
+   },
+   {
+    "text": "no",
+    "start": 22.606,
+    "end": 22.896
+   },
+   {
+    "text": "calendars.",
+    "start": 22.946,
+    "end": 23.516
+   },
+   {
+    "text": "So",
+    "start": 24.324,
+    "end": 24.614
+   },
+   {
+    "text": "he",
+    "start": 24.664,
+    "end": 24.954
+   },
+   {
+    "text": "watches",
+    "start": 25.004,
+    "end": 25.469
+   },
+   {
+    "text": "the",
+    "start": 25.519,
+    "end": 25.844
+   },
+   {
+    "text": "Moon.",
+    "start": 25.894,
+    "end": 26.289
+   },
+   {
+    "text": "New,",
+    "start": 26.539,
+    "end": 26.899
+   },
+   {
+    "text": "half,",
+    "start": 27.149,
+    "end": 27.544
+   },
+   {
+    "text": "full,",
+    "start": 27.794,
+    "end": 28.189
+   },
+   {
+    "text": "half",
+    "start": 28.439,
+    "end": 28.799
+   },
+   {
+    "text": "again.",
+    "start": 28.849,
+    "end": 29.279
+   },
+   {
+    "text": "Each",
+    "start": 29.529,
+    "end": 29.889
+   },
+   {
+    "text": "change",
+    "start": 29.939,
+    "end": 30.369
+   },
+   {
+    "text": "takes",
+    "start": 30.419,
+    "end": 30.814
+   },
+   {
+    "text": "about",
+    "start": 30.864,
+    "end": 31.259
+   },
+   {
+    "text": "seven",
+    "start": 31.309,
+    "end": 31.704
+   },
+   {
+    "text": "days.",
+    "start": 31.754,
+    "end": 32.149
+   },
+   {
+    "text": "Then",
+    "start": 32.95,
+    "end": 33.31
+   },
+   {
+    "text": "he",
+    "start": 33.36,
+    "end": 33.65
+   },
+   {
+    "text": "notices",
+    "start": 33.7,
+    "end": 34.165
+   },
+   {
+    "text": "seven",
+    "start": 34.215,
+    "end": 34.61
+   },
+   {
+    "text": "bright",
+    "start": 34.66,
+    "end": 35.09
+   },
+   {
+    "text": "lights",
+    "start": 35.14,
+    "end": 35.57
+   },
+   {
+    "text": "that",
+    "start": 35.62,
+    "end": 35.98
+   },
+   {
+    "text": "wander",
+    "start": 36.03,
+    "end": 36.46
+   },
+   {
+    "text": "across",
+    "start": 36.51,
+    "end": 36.94
+   },
+   {
+    "text": "the",
+    "start": 36.99,
+    "end": 37.315
+   },
+   {
+    "text": "sky:",
+    "start": 37.365,
+    "end": 37.725
+   },
+   {
+    "text": "the",
+    "start": 37.775,
+    "end": 38.1
+   },
+   {
+    "text": "Sun,",
+    "start": 38.15,
+    "end": 38.51
+   },
+   {
+    "text": "the",
+    "start": 38.76,
+    "end": 39.085
+   },
+   {
+    "text": "Moon",
+    "start": 39.135,
+    "end": 39.495
+   },
+   {
+    "text": "and",
+    "start": 39.545,
+    "end": 39.87
+   },
+   {
+    "text": "five",
+    "start": 39.92,
+    "end": 40.28
+   },
+   {
+    "text": "planets.",
+    "start": 40.33,
+    "end": 40.83
+   },
+   {
+    "text": "But",
+    "start": 41.648,
+    "end": 41.973
+   },
+   {
+    "text": "every",
+    "start": 42.023,
+    "end": 42.418
+   },
+   {
+    "text": "town",
+    "start": 42.468,
+    "end": 42.828
+   },
+   {
+    "text": "counts",
+    "start": 42.878,
+    "end": 43.308
+   },
+   {
+    "text": "days",
+    "start": 43.358,
+    "end": 43.718
+   },
+   {
+    "text": "its",
+    "start": 43.768,
+    "end": 44.093
+   },
+   {
+    "text": "own",
+    "start": 44.143,
+    "end": 44.468
+   },
+   {
+    "text": "way.",
+    "start": 44.518,
+    "end": 44.878
+   },
+   {
+    "text": "Market",
+    "start": 45.128,
+    "end": 45.558
+   },
+   {
+    "text": "day",
+    "start": 45.608,
+    "end": 45.933
+   },
+   {
+    "text": "here",
+    "start": 45.983,
+    "end": 46.343
+   },
+   {
+    "text": "is",
+    "start": 46.393,
+    "end": 46.683
+   },
+   {
+    "text": "rest",
+    "start": 46.733,
+    "end": 47.093
+   },
+   {
+    "text": "day",
+    "start": 47.143,
+    "end": 47.468
+   },
+   {
+    "text": "there.",
+    "start": 47.518,
+    "end": 47.948
+   },
+   {
+    "text": "Trading",
+    "start": 48.198,
+    "end": 48.663
+   },
+   {
+    "text": "turns",
+    "start": 48.713,
+    "end": 49.108
+   },
+   {
+    "text": "into",
+    "start": 49.158,
+    "end": 49.518
+   },
+   {
+    "text": "chaos.",
+    "start": 49.568,
+    "end": 49.998
+   },
+   {
+    "text": "The",
+    "start": 50.802,
+    "end": 51.127
+   },
+   {
+    "text": "seven-day",
+    "start": 51.177,
+    "end": 51.712
+   },
+   {
+    "text": "idea",
+    "start": 51.762,
+    "end": 52.122
+   },
+   {
+    "text": "wins.",
+    "start": 52.172,
+    "end": 52.567
+   },
+   {
+    "text": "It",
+    "start": 52.817,
+    "end": 53.107
+   },
+   {
+    "text": "spreads",
+    "start": 53.157,
+    "end": 53.622
+   },
+   {
+    "text": "from",
+    "start": 53.672,
+    "end": 54.032
+   },
+   {
+    "text": "Babylon,",
+    "start": 54.082,
+    "end": 54.582
+   },
+   {
+    "text": "through",
+    "start": 54.832,
+    "end": 55.297
+   },
+   {
+    "text": "Jewish",
+    "start": 55.347,
+    "end": 55.777
+   },
+   {
+    "text": "tradition,",
+    "start": 55.827,
+    "end": 56.397
+   },
+   {
+    "text": "all",
+    "start": 56.647,
+    "end": 56.972
+   },
+   {
+    "text": "the",
+    "start": 57.022,
+    "end": 57.347
+   },
+   {
+    "text": "way",
+    "start": 57.397,
+    "end": 57.722
+   },
+   {
+    "text": "to",
+    "start": 57.772,
+    "end": 58.062
+   },
+   {
+    "text": "Rome.",
+    "start": 58.112,
+    "end": 58.507
+   },
+   {
+    "text": "That's",
+    "start": 59.308,
+    "end": 59.738
+   },
+   {
+    "text": "why",
+    "start": 59.788,
+    "end": 60.113
+   },
+   {
+    "text": "we",
+    "start": 60.163,
+    "end": 60.453
+   },
+   {
+    "text": "still",
+    "start": 60.503,
+    "end": 60.898
+   },
+   {
+    "text": "say",
+    "start": 60.948,
+    "end": 61.273
+   },
+   {
+    "text": "Sunday",
+    "start": 61.323,
+    "end": 61.753
+   },
+   {
+    "text": "and",
+    "start": 61.803,
+    "end": 62.128
+   },
+   {
+    "text": "Monday:",
+    "start": 62.178,
+    "end": 62.643
+   },
+   {
+    "text": "the",
+    "start": 62.693,
+    "end": 63.018
+   },
+   {
+    "text": "Sun's",
+    "start": 63.068,
+    "end": 63.463
+   },
+   {
+    "text": "day",
+    "start": 63.513,
+    "end": 63.838
+   },
+   {
+    "text": "and",
+    "start": 63.888,
+    "end": 64.213
+   },
+   {
+    "text": "the",
+    "start": 64.263,
+    "end": 64.588
+   },
+   {
+    "text": "Moon's",
+    "start": 64.638,
+    "end": 65.068
+   },
+   {
+    "text": "day.",
+    "start": 65.118,
+    "end": 65.478
+   },
+   {
+    "text": "So",
+    "start": 66.278,
+    "end": 66.568
+   },
+   {
+    "text": "every",
+    "start": 66.618,
+    "end": 67.013
+   },
+   {
+    "text": "week",
+    "start": 67.063,
+    "end": 67.423
+   },
+   {
+    "text": "is",
+    "start": 67.473,
+    "end": 67.763
+   },
+   {
+    "text": "a",
+    "start": 67.813,
+    "end": 68.068
+   },
+   {
+    "text": "tiny",
+    "start": 68.118,
+    "end": 68.478
+   },
+   {
+    "text": "map",
+    "start": 68.528,
+    "end": 68.853
+   },
+   {
+    "text": "of",
+    "start": 68.903,
+    "end": 69.193
+   },
+   {
+    "text": "the",
+    "start": 69.243,
+    "end": 69.568
+   },
+   {
+    "text": "ancient",
+    "start": 69.618,
+    "end": 70.083
+   },
+   {
+    "text": "sky.",
+    "start": 70.133,
+    "end": 70.493
+   },
+   {
+    "text": "Follow",
+    "start": 70.743,
+    "end": 71.173
+   },
+   {
+    "text": "for",
+    "start": 71.223,
+    "end": 71.548
+   },
+   {
+    "text": "more",
+    "start": 71.598,
+    "end": 71.958
+   },
+   {
+    "text": "stories",
+    "start": 72.008,
+    "end": 72.473
+   },
+   {
+    "text": "of",
+    "start": 72.523,
+    "end": 72.813
+   },
+   {
+    "text": "how",
+    "start": 72.863,
+    "end": 73.188
+   },
+   {
+    "text": "things",
+    "start": 73.238,
+    "end": 73.668
+   },
+   {
+    "text": "began.",
+    "start": 73.718,
+    "end": 74.148
+   }
+  ]
+ },
+ "audioSrc": null,
+ "theme": {
+  "accent": "#F4A261"
+ },
+ "character": {
+  "outfit": "#8B5A2B",
+  "hair": "messy"
+ }
+}

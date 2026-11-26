@@ -1,0 +1,133 @@
+{
+  "channel": {
+    "niche": "Untold stories from Indian mythology and history, told as short cinematic films",
+    "audience": "Indians in India and abroad, 16-40, who love mythology, history and epic storytelling",
+    "language": "English",
+    "style": "Epic, reverent and gripping, like a movie trailer narrated by a calm storyteller. Simple words.",
+    "cta": "Follow for more untold stories."
+  },
+  "video": {
+    "format": "cinematic",
+    "target_seconds": 50,
+    "formats": [
+      "Short"
+    ],
+    "theme": {
+      "accent": "#E9B44C",
+      "accent2": "#C0392B",
+      "bg": "#000000"
+    },
+    "theme_presets": {
+      "stickman": {
+        "accent": "#F4A261",
+        "accent2": "#2A9D8F",
+        "bg": "#0B0B14"
+      },
+      "cinematic": {
+        "accent": "#E9B44C",
+        "accent2": "#C0392B",
+        "bg": "#000000"
+      }
+    }
+  },
+  "voice": {
+    "name": "en-IN-NeerjaNeural",
+    "rate": "-3%",
+    "pitch": "-2Hz",
+    "gap_seconds": 0.35
+  },
+  "claude": {
+    "allow_web_search": true,
+    "model": ""
+  },
+  "upload": {
+    "enabled": true,
+    "privacy": "private",
+    "publish_delay_hours": 0,
+    "category_id": "28",
+    "made_for_kids": false,
+    "contains_synthetic_media": false,
+    "add_shorts_tag": true
+  },
+  "videos_per_run": 1,
+  "story": {
+    "scenes": 9,
+    "character_name": "Tiko",
+    "character": {
+      "outfit": "#8B5A2B",
+      "hair": "messy"
+    }
+  },
+  "profiles_note": "Formats never mix: each has its own channel text (channels), voice (voices), colours (video.theme_presets), topic queue (ideas_<format>.csv), output folder (out/<format>/) and YouTube channel (secrets/token_<format>.json). video.format is the preferred format; stickman is used when Flow credits run out.",
+  "cinematic": {
+    "engine": "flow",
+    "aspect": "9:16",
+    "formats": [
+      "Short"
+    ],
+    "shots": 10,
+    "clip_seconds": 8,
+    "flow_model_preference": [
+      "Veo 3.1 - Lite",
+      "Gemini Omni Flash",
+      "Veo 3.1 - Fast"
+    ],
+    "downloads_dir": [
+      "~/Downloads",
+      "~/mnt/Downloads"
+    ],
+    "clip_audio_volume": 0.3,
+    "music": "",
+    "music_volume": 0.12,
+    "letterbox": false,
+    "api_model": "gemini-omni-1.1-flash",
+    "api_resolution": "720p",
+    "content_rules": [
+      "Never show the face of Krishna, Shiva or any deity: show divine figures only from behind, as silhouettes in golden light, or through symbols (peacock feather, flute, chakra, trident).",
+      "No gore: never show killing, beheading or blood on screen; imply it with cutaways, shadows or symbols.",
+      "Be respectful: these are sacred stories for many viewers. No mockery, no modern slang."
+    ],
+    "fallback_to_stickman": true,
+    "credits_per_clip": 10,
+    "redo_margin": 0.3,
+    "credit_reserve": 0,
+    "monthly_credits": 1000,
+    "credit_reset_day": 1,
+    "max_pending_films": 1,
+    "accounts_note": "Credits are tracked per Google account in state/credits.json; a film is made if ANY account can afford it."
+  },
+  "channels": {
+    "cinematic": {
+      "niche": "Untold stories from Indian mythology and history, told as short cinematic films",
+      "audience": "Indians in India and abroad, 16-40, who love mythology, history and epic storytelling",
+      "language": "English",
+      "style": "Epic, reverent and gripping, like a movie trailer narrated by a calm storyteller. Simple words.",
+      "cta": "Follow for more untold stories."
+    },
+    "stickman": {
+      "niche": "Stick-figure stories that answer 'why' and 'how' questions about history, science and everyday things",
+      "audience": "Curious people in India and worldwide, 15-35, who like learning through stories",
+      "language": "English",
+      "style": "Story first, facts second. Warm, simple, a little funny. One question per video.",
+      "cta": "Follow for more stories of how things began."
+    }
+  },
+  "voices": {
+    "cinematic": {
+      "name": "en-IN-PrabhatNeural",
+      "rate": "-4%",
+      "pitch": "-4Hz"
+    },
+    "stickman": {
+      "name": "en-IN-NeerjaNeural",
+      "rate": "-3%",
+      "pitch": "-2Hz"
+    }
+  },
+  "videos_per_day": 1,
+  "topics": {
+    "plan_with_events": true,
+    "lookahead_days": 14,
+    "region": "India"
+  }
+}

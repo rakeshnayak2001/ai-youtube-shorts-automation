@@ -1,0 +1,20 @@
+{
+  "slug": "why-does-a-week-have-7-days",
+  "format": "stickman",
+  "topic": "Why does a week have 7 days?",
+  "title": "Why Does a Week Have 7 Days?",
+  "description": "No planet spins in 7 days, yet the whole world uses a 7-day week. The answer is written in the ancient night sky.",
+  "tags": ["history", "ancient history", "week", "calendar", "babylon", "stickman", "explained"],
+  "sources": ["Encyclopaedia Britannica: Week", "Encyclopaedia Britannica: Calendar - The seven-day week"],
+  "scenes": [
+    {"type": "story", "setting": "field", "time": "night", "pose": "look_up", "mood": "surprised", "label": "Thousands of years ago", "narration": "Thousands of years ago, a farmer stared at the night sky and noticed the Moon was changing shape."},
+    {"type": "question", "setting": "field", "time": "night", "question": "Why does a week have 7 days?", "narration": "So why does every week, everywhere, have exactly seven days?"},
+    {"type": "story", "setting": "village", "time": "day", "pose": "walk", "mood": "neutral", "hold": "stick", "narration": "Meet Tiko. He needs to know when to plant, when to trade and when to rest. But there are no calendars."},
+    {"type": "story", "setting": "field", "time": "night", "pose": "point", "mood": "happy", "overhead": "lightbulb", "narration": "So he watches the Moon. New, half, full, half again. Each change takes about seven days."},
+    {"type": "story", "setting": "mountains", "time": "night", "pose": "look_up", "mood": "surprised", "label": "7 moving lights", "narration": "Then he notices seven bright lights that wander across the sky: the Sun, the Moon and five planets."},
+    {"type": "story", "setting": "market", "time": "day", "pose": "shrug", "mood": "angry", "crowd": 3, "props": ["coins"], "narration": "But every town counts days its own way. Market day here is rest day there. Trading turns into chaos."},
+    {"type": "story", "setting": "village", "time": "dusk", "pose": "cheer", "mood": "happy", "crowd": 2, "narration": "The seven-day idea wins. It spreads from Babylon, through Jewish tradition, all the way to Rome."},
+    {"type": "story", "setting": "room", "time": "day", "pose": "point", "mood": "happy", "label": "Sun-day, Moon-day", "props": ["clock"], "narration": "That's why we still say Sunday and Monday: the Sun's day and the Moon's day."},
+    {"type": "story", "setting": "campfire", "time": "night", "pose": "sit", "mood": "happy", "narration": "So every week is a tiny map of the ancient sky. Follow for more stories of how things began."}
+  ]
+}

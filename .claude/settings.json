@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python run.py:*)",
+      "Bash(python scripts/generate.py:*)",
+      "Bash(python scripts/tts.py:*)",
+      "Bash(python scripts/render.py:*)",
+      "Bash(py run.py:*)",
+      "Bash(py scripts/generate.py:*)",
+      "Bash(py scripts/tts.py:*)",
+      "Bash(py scripts/render.py:*)",
+      "Bash(npx remotion:*)",
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)",
+      "Bash(edge-tts:*)",
+      "WebSearch",
+      "WebFetch",
+      "Bash(python scripts/film.py:*)",
+      "Bash(python scripts/collect.py:*)",
+      "Bash(py scripts/film.py:*)",
+      "Bash(py scripts/collect.py:*)"
+    ],
+    "ask": [
+      "Bash(python scripts/upload.py:*)",
+      "Bash(py scripts/upload.py:*)",
+      "Bash(python scripts/veo_api.py:*)",
+      "Bash(py scripts/veo_api.py:*)"
+    ]
+  }
+}

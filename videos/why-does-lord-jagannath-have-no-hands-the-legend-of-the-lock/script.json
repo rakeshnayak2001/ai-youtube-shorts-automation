@@ -1,0 +1,192 @@
+{
+  "title": "Why Does Lord Jagannath Have No Hands? The Legend of the Locked Door",
+  "description": "Manima! A king, a sacred log from the sea, and a carpenter who asked for one thing: never open the door.\nThe old legend of King Indradyumna and why Lord Jagannath of Puri has no hands. Jai Jagannath.",
+  "tags": [
+    "jagannath",
+    "puri",
+    "manima",
+    "jai jagannath",
+    "indradyumna",
+    "rath yatra",
+    "krishna",
+    "odisha",
+    "indian mythology",
+    "hindu stories"
+  ],
+  "sources": [
+    "Skanda Purana, Utkala Khanda (Purushottama Kshetra Mahatmya): legend of King Indradyumna",
+    "Wikipedia: Indradyumna; Gundicha Temple",
+    "Odisha Review (Govt. of Odisha), June-July 2007: the Jagannath legend"
+  ],
+  "scenes": [
+    {
+      "type": "story",
+      "hero": "jagannath",
+      "setting": "village",
+      "time": "night",
+      "crowd": 2,
+      "label": "Jai Jagannath",
+      "narration": "Manimaaa! Manimaaa!",
+      "speak": "मणिमा! मणिमा!",
+      "voice": {
+        "name": "hi-IN-MadhurNeural",
+        "rate": "-25%",
+        "pitch": "+12Hz"
+      },
+      "fx": "echo"
+    },
+    {
+      "type": "story",
+      "setting": "room",
+      "time": "night",
+      "pose": "scared",
+      "mood": "surprised",
+      "position": "left",
+      "facing": "right",
+      "props": [
+        "door"
+      ],
+      "overhead": "exclamation",
+      "label": "Puri, Odisha",
+      "narration": "The king threw open the door. The carpenter was gone, and the idols had no hands."
+    },
+    {
+      "type": "story",
+      "hero": "trinity",
+      "setting": "room",
+      "time": "night",
+      "narration": "Three unfinished idols stared back, with great round eyes."
+    },
+    {
+      "type": "question",
+      "question": "Why does Jagannath have no hands?",
+      "setting": "village",
+      "time": "dusk",
+      "props": [
+        "temple"
+      ],
+      "narration": "So why is Jagannath, a form of Krishna, worshipped without hands?"
+    },
+    {
+      "type": "story",
+      "setting": "field",
+      "time": "day",
+      "pose": "look_up",
+      "mood": "thinking",
+      "position": "left",
+      "facing": "right",
+      "props": [
+        "temple"
+      ],
+      "overhead": "thought",
+      "label": "Long, long ago",
+      "narration": "Legend says King Indradyumna longed to build a great temple for Vishnu."
+    },
+    {
+      "type": "story",
+      "setting": "campfire",
+      "time": "night",
+      "pose": "sit",
+      "mood": "neutral",
+      "position": "left",
+      "facing": "right",
+      "overhead": "zzz",
+      "narration": "In a dream, he was told a sacred log would float in from the sea."
+    },
+    {
+      "type": "story",
+      "hero": "log",
+      "setting": "ocean",
+      "time": "dusk",
+      "label": "The sacred log",
+      "narration": "One morning, there it was."
+    },
+    {
+      "type": "story",
+      "setting": "village",
+      "time": "day",
+      "pose": "shrug",
+      "mood": "sad",
+      "position": "right",
+      "facing": "left",
+      "props": [
+        "log"
+      ],
+      "crowd": 3,
+      "overhead": "question",
+      "narration": "But no carpenter could carve it. Their tools simply broke."
+    },
+    {
+      "type": "story",
+      "setting": "market",
+      "time": "day",
+      "pose": "walk",
+      "mood": "surprised",
+      "position": "center",
+      "facing": "right",
+      "crowd": 2,
+      "overhead": "lightbulb",
+      "narration": "Then a mysterious old carpenter arrived, with one rule."
+    },
+    {
+      "type": "story",
+      "hero": "door",
+      "setting": "room",
+      "time": "day",
+      "label": "21 days",
+      "narration": "Lock me in for twenty one days. Never open the door."
+    },
+    {
+      "type": "story",
+      "setting": "room",
+      "time": "dusk",
+      "pose": "think",
+      "mood": "scared",
+      "position": "right",
+      "facing": "left",
+      "props": [
+        "clock"
+      ],
+      "overhead": "question",
+      "narration": "But before the days were up, the carving stopped. The queen feared he had died."
+    },
+    {
+      "type": "story",
+      "setting": "river",
+      "time": "dusk",
+      "pose": "sad",
+      "mood": "sad",
+      "position": "left",
+      "facing": "right",
+      "overhead": "thought",
+      "narration": "The king was heartbroken. Legend says the carpenter was Vishwakarma, the divine builder."
+    },
+    {
+      "type": "story",
+      "hero": "jagannath",
+      "setting": "mountains",
+      "time": "night",
+      "narration": "Then a divine voice said: worship the Lord just as he is."
+    },
+    {
+      "type": "story",
+      "hero": "chariot",
+      "setting": "city",
+      "time": "day",
+      "crowd": 4,
+      "label": "Rath Yatra",
+      "narration": "So to this day, Jagannath has no hands, and every year he rides out on his giant chariot."
+    },
+    {
+      "type": "story",
+      "hero": "trinity",
+      "setting": "village",
+      "time": "dusk",
+      "crowd": 2,
+      "narration": "Jai Jagannath. Follow for more stories like this."
+    }
+  ],
+  "slug": "why-does-lord-jagannath-have-no-hands-the-legend-of-the-lock",
+  "topic": "Why does Lord Jagannath have no hands? Tell the legend of King Indradyumna and the sculptor, as a story. Never draw the deity; show the king, the closed door and the temple.",
+  "format": "stickman"
+}
