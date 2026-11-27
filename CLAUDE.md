@@ -26,16 +26,18 @@ generate.py (claude -p writes script.json: style, characters, shots) -> film.py 
 
 ## Master / worker models (token saving)
 - **Claude = master**: scripts, fact-checks, timely topics (web search), decisions, review.
-- **Local Ollama model = worker**: repetitive jobs. Routed per task in `config.json -> llm.tasks`
-  (`script`, `topic_plan`, `json_repair`, `ideas`; values `claude`, `claude:<model>`, `local`, `local:<model>`).
+- **Worker = Gemini by default** (repetitive jobs). Routed per task in `config.json -> llm.tasks`
+  (`script`, `topic_plan`, `json_repair`, `ideas`; values `claude`, `claude:<model>`, `gemini`, `gemini:<model>`, `local`, `local:<model>`).
+- **Local Ollama model is OFF unless `llm.local_enabled` is true** (dashboard: Models > "Use local model"). While off, nothing
+  runs on it: `local` tasks go to Gemini and it is left out of the fallback chain.
   All pipeline LLM calls go through `scripts/llm.py` (`llm.ask(task, prompt)`); usage is logged to `state/llm_usage.json`.
 - In chat sessions, the `local-worker` MCP server (`tools/local_worker_mcp.py`, `.mcp.json`) gives you
   `worker_generate`, `worker_generate_to_file`, `worker_batch`. Use them for bulk/boring text (topic lists, rewording,
   reformatting); test the instruction on one item first, spot-check results, never trust it for facts.
 - **Gemini worker** (optional): task value `gemini` / `gemini:<model>`. `llm.gemini.backend`: `agy` (default; the user's
   Google AI Pro plan via Antigravity CLI, one account, model `agy_model`) or `api` (AI Studio keys, two-key failover).
-  On quota/failure: `llm.worker_fallback` (local) then Claude. Runs through the separate **agent-squad** repo (found when pip-installed, at `llm.squad_path`, or at
-  `../agent-squad`). Without agent-squad the app still works and Gemini tasks fall back to Claude. MCP tools take `worker="gemini"`.
+  On quota/failure: `llm.worker_fallback` (local, only if enabled) then Claude. Runs through the separate **agent-squad** repo (found when pip-installed, at `llm.squad_path`, or at
+  `../agent-squad`). Without agent-squad the app still works and Gemini tasks fall back to Claude. MCP tools default to `worker="gemini"`.
 - If the worker is down, `llm.fallback_to_claude` sends its tasks to Claude.
 - Dashboard: `python dashboard/server.py` (or `dashboard.bat`) -> http://127.0.0.1:8765. Worker setup: `setup_local_llm.bat`.
 

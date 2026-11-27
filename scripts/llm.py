@@ -5,7 +5,8 @@ Every LLM call in the pipeline names a *task*; config.json -> llm.tasks decides 
     "llm": {
       "master": {"model": ""},                          # "" = Claude Code default, or sonnet / opus / haiku
       "worker": {"url": "http://localhost:11434", "model": "qwen3:8b", "temperature": 0.3},
-      "tasks": {"script": "claude", "topic_plan": "claude", "json_repair": "local", "ideas": "local"},
+      "tasks": {"script": "claude", "topic_plan": "claude", "json_repair": "gemini", "ideas": "gemini"},
+      "local_enabled": false,                           # the local model is off unless switched on
       "fallback_to_claude": true
     }
 
@@ -16,7 +17,9 @@ Gemini (and any later worker such as Codex) comes from the separate agent-squad 
 or found at llm.squad_path / ../agent-squad, every call goes through it, with Gemini account rotation.
 Without it, this file still runs Claude and the local model on its own, and Gemini tasks fall back to Claude.
 Judgement work (scripts, fact-checks, timely topics with web search) stays on Claude;
-repetitive work (fixing broken JSON, brainstorming topic lists) goes to the free local model.
+repetitive work (fixing broken JSON, brainstorming topic lists) goes to Gemini by default.
+The local model only runs when llm.local_enabled is true; while it is off, "local" tasks go to Gemini
+and the local model is left out of the fallback chain too.
 Every call is counted in state/llm_usage.json so the dashboard can show what was saved.
 
     python scripts/llm.py status
@@ -42,7 +45,7 @@ TASKS = {
     "json_repair": "Fix a script that came back as invalid JSON",
     "ideas": "Brainstorm new topics for the queue",
 }
-DEFAULT_TASKS = {"script": "claude", "topic_plan": "claude", "json_repair": "local", "ideas": "local"}
+DEFAULT_TASKS = {"script": "claude", "topic_plan": "claude", "json_repair": "gemini", "ideas": "gemini"}
 WORKER_KINDS = ("claude", "local", "gemini")  # agent-squad may add more (e.g. codex)
 USAGE = STATE / "llm_usage.json"
 USAGE_FILE = str(USAGE)  # read by agent-squad's MCP server (SQUAD_SETTINGS_MODULE=llm)
@@ -99,7 +102,20 @@ def llm_cfg(cfg: dict | None = None) -> dict:
     return {"master": master, "worker": worker, "gemini": gemini,
             "tasks": {**DEFAULT_TASKS, **(c.get("tasks") or {})},
             "fallback_to_claude": c.get("fallback_to_claude", True),
-            "worker_fallback": c.get("worker_fallback", ["local"])}
+            "worker_fallback": c.get("worker_fallback", ["local"]),
+            # The local Ollama model is off unless switched on: then nothing runs on it, not even as fallback.
+            "local_enabled": bool(c.get("local_enabled", False))}
+
+
+def local_enabled(cfg: dict | None = None) -> bool:
+    return llm_cfg(cfg)["local_enabled"]
+
+
+def _model_for(kind: str, cfg: dict | None = None) -> str:
+    lc = llm_cfg(cfg)
+    if kind == "gemini":
+        return lc["gemini"].get("agy_model", "") if gemini_backend(cfg) == "agy" else lc["gemini"]["model"]
+    return {"claude": lc["master"]["model"], "local": lc["worker"]["model"]}.get(kind, "")
 
 
 def route(task: str, cfg: dict | None = None) -> tuple[str, str]:
@@ -110,12 +126,10 @@ def route(task: str, cfg: dict | None = None) -> tuple[str, str]:
     known = set(WORKER_KINDS) | set(getattr(squad(cfg), "WORKERS", {}) or {})
     if kind not in known:
         kind, model = "claude", ""
+    if kind == "local" and not lc["local_enabled"]:
+        kind, model = "gemini", ""  # local model switched off: Gemini is the worker
     if not model:
-        gem_model = lc["gemini"]["model"]
-        if kind == "gemini" and gemini_backend(cfg) == "agy":
-            gem_model = lc["gemini"].get("agy_model", "")  # agy has its own model names ("" = its default)
-        model = {"claude": lc["master"]["model"], "local": lc["worker"]["model"],
-                 "gemini": gem_model}.get(kind, "")
+        model = _model_for(kind, cfg)  # agy has its own model names ("" = its default)
     return kind, model
 
 
@@ -130,9 +144,10 @@ def gemini_backend(cfg: dict | None = None) -> str:
 
 def fallback_chain(kind: str, cfg: dict | None = None) -> list[str]:
     """Who takes over when a worker fails or runs out of quota: llm.worker_fallback (default: the local
-    model), then Claude if llm.fallback_to_claude."""
+    model, only if llm.local_enabled), then Claude if llm.fallback_to_claude."""
     lc = llm_cfg(cfg)
-    chain = [w for w in lc["worker_fallback"] if w.partition(":")[0] != kind and kind != "claude"]
+    chain = [w for w in lc["worker_fallback"] if w.partition(":")[0] != kind and kind != "claude"
+             and (lc["local_enabled"] or w.partition(":")[0] != "local")]
     if lc["fallback_to_claude"] and kind != "claude":
         chain.append("claude")
     return chain
@@ -249,6 +264,9 @@ def ask_spec(kind: str, model: str, prompt: str, cfg: dict | None = None, task: 
     Without it: the built-in Claude / Ollama code below."""
     cfg = cfg or load_config()
     fb = llm_cfg(cfg)["fallback_to_claude"] if fallback is None else fallback
+    if kind == "local" and not local_enabled(cfg):
+        print("  local model is switched off (llm.local_enabled); using Gemini")
+        kind, model = "gemini", _model_for("gemini", cfg)
     sq = squad(cfg)
     if sq:
         opts = {k: kw[k] for k in ("system", "json_mode", "temperature", "web") if k in kw and kw[k] is not None}
@@ -287,14 +305,17 @@ def ask(task: str, prompt: str, cfg: dict | None = None, **kw) -> str:
 # ---------------------------------------------------------------- status
 def ollama_status(cfg: dict | None = None) -> dict:
     w = llm_cfg(cfg)["worker"]
+    if not local_enabled(cfg):
+        return {"enabled": False, "up": False, "url": w["url"], "models": [], "model": w["model"],
+                "model_ready": False, "error": "switched off (llm.local_enabled)"}
     try:
         with urllib.request.urlopen(w["url"].rstrip("/") + "/api/tags", timeout=3) as r:
             models = [m["name"] for m in json.loads(r.read()).get("models", [])]
-        return {"up": True, "url": w["url"], "models": models, "model": w["model"],
+        return {"enabled": True, "up": True, "url": w["url"], "models": models, "model": w["model"],
                 "model_ready": any(m == w["model"] or m.split(":")[0] == w["model"] for m in models)}
     except Exception as e:  # noqa: BLE001
-        return {"up": False, "url": w["url"], "models": [], "model": w["model"], "model_ready": False,
-                "error": str(e)}
+        return {"enabled": True, "up": False, "url": w["url"], "models": [], "model": w["model"],
+                "model_ready": False, "error": str(e)}
 
 
 def gemini_status(cfg: dict | None = None) -> dict:
@@ -327,6 +348,9 @@ if __name__ == "__main__":
         print(json.dumps(status(), indent=2))
     elif args[:1] == ["test"] and len(args) >= 3:
         kind, _, model = args[1].partition(":")
+        if kind == "local" and not local_enabled():
+            sys.exit("The local model is switched off. Turn on 'Use local model' in the dashboard "
+                     "(Models page) or set llm.local_enabled to true in config.json.")
         print(ask_spec(kind, model, " ".join(args[2:]), task="test", fallback=False))
     elif args[:1] == ["usage"]:
         print(json.dumps(usage_summary()["total"], indent=2))

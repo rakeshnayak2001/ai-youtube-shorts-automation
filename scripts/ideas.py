@@ -3,7 +3,7 @@
     python scripts/ideas.py stickman --n 15
     python scripts/ideas.py cinematic --n 10 --theme "forgotten kings of Odisha"
 
-Runs on the local model by default (config.json -> llm.tasks.ideas). Duplicates of queued topics
+Runs on the Gemini worker by default (config.json -> llm.tasks.ideas). Duplicates of queued topics
 and past videos are dropped. Claude still fact-checks each topic when it writes the script.
 """
 import argparse
