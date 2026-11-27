@@ -1,4 +1,4 @@
-"""Model router: Claude is the MASTER, a local LLM (Ollama) is the WORKER.
+"""Model router: Claude is the MASTER; a local LLM (Ollama) or Gemini is the WORKER.
 
 Every LLM call in the pipeline names a *task*; config.json -> llm.tasks decides who does it:
 
@@ -9,16 +9,24 @@ Every LLM call in the pipeline names a *task*; config.json -> llm.tasks decides 
       "fallback_to_claude": true
     }
 
-A task value is "claude", "claude:<model>", "local" or "local:<ollama-model>".
+A task value is "claude", "claude:<model>", "local", "local:<ollama-model>", "gemini" or "gemini:<model>".
+
+Gemini (and any later worker such as Codex) comes from the separate agent-squad package
+(https://github.com/rakeshnayak2001/agent-squad). When it is installed (`pip install -e "C:\\AI Vid\\agent-squad"`)
+or found at llm.squad_path / ../agent-squad, every call goes through it, with Gemini account rotation.
+Without it, this file still runs Claude and the local model on its own, and Gemini tasks fall back to Claude.
 Judgement work (scripts, fact-checks, timely topics with web search) stays on Claude;
 repetitive work (fixing broken JSON, brainstorming topic lists) goes to the free local model.
 Every call is counted in state/llm_usage.json so the dashboard can show what was saved.
 
     python scripts/llm.py status
     python scripts/llm.py test local "Say hi in five words"
+    python scripts/llm.py test gemini "Say hi in five words"
 """
 import datetime as dt
+import importlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -26,7 +34,7 @@ import time
 import urllib.error
 import urllib.request
 
-from common import STATE, load_config, read_json, write_json
+from common import ROOT, STATE, load_config, read_json, write_json
 
 TASKS = {
     "script": "Write the video script (needs accuracy + web search)",
@@ -35,7 +43,49 @@ TASKS = {
     "ideas": "Brainstorm new topics for the queue",
 }
 DEFAULT_TASKS = {"script": "claude", "topic_plan": "claude", "json_repair": "local", "ideas": "local"}
+WORKER_KINDS = ("claude", "local", "gemini")  # agent-squad may add more (e.g. codex)
 USAGE = STATE / "llm_usage.json"
+USAGE_FILE = str(USAGE)  # read by agent-squad's MCP server (SQUAD_SETTINGS_MODULE=llm)
+
+
+# ---------------------------------------------------------------- agent-squad (optional)
+_SQUAD = None
+
+
+def squad(cfg: dict | None = None):
+    """The agent_squad module if it is installed or can be found, else None (standalone mode)."""
+    global _SQUAD
+    if _SQUAD is not None:
+        return _SQUAD or None
+    try:
+        _SQUAD = importlib.import_module("agent_squad")
+    except ImportError:
+        cfg = cfg or load_config()
+        for cand in [(cfg.get("llm") or {}).get("squad_path") or "", str(ROOT.parent / "agent-squad")]:
+            if cand and (os.path.isdir(os.path.join(os.path.expanduser(cand), "agent_squad"))):
+                sys.path.insert(0, os.path.expanduser(cand))
+                try:
+                    _SQUAD = importlib.import_module("agent_squad")
+                    break
+                except ImportError:
+                    pass
+        else:
+            _SQUAD = False
+    return _SQUAD or None
+
+
+def squad_config(cfg: dict | None = None) -> dict:
+    """This app's model settings as an agent-squad config, layered over ~/.agent-squad/squad.json.
+    Gemini account sign-ins and cooldowns live in agent-squad's own folders, so they are shared."""
+    cfg = cfg or load_config()
+    sq = squad(cfg)
+    lc = llm_cfg(cfg)
+    over = {"workers": {
+        "claude": {"model": lc["master"]["model"], "allow_web_search": (cfg.get("claude") or {}).get("allow_web_search", True)},
+        "local": {k: lc["worker"][k] for k in ("url", "model", "temperature", "timeout")},
+        "gemini": {k: v for k, v in lc["gemini"].items() if v not in ("", None, [])},
+    }}
+    return sq.load_config(over) if sq else over
 
 
 # ---------------------------------------------------------------- config
@@ -45,19 +95,23 @@ def llm_cfg(cfg: dict | None = None) -> dict:
     worker = {"url": "http://localhost:11434", "model": "qwen3:8b", "temperature": 0.3, "timeout": 600,
               **(c.get("worker") or {})}
     master = {"model": (cfg.get("claude") or {}).get("model", ""), **(c.get("master") or {})}
-    return {"master": master, "worker": worker, "tasks": {**DEFAULT_TASKS, **(c.get("tasks") or {})},
+    gemini = {"model": "gemini-3-pro-preview", "rotation": "failover", **(c.get("gemini") or {})}
+    return {"master": master, "worker": worker, "gemini": gemini,
+            "tasks": {**DEFAULT_TASKS, **(c.get("tasks") or {})},
             "fallback_to_claude": c.get("fallback_to_claude", True)}
 
 
 def route(task: str, cfg: dict | None = None) -> tuple[str, str]:
-    """('claude' | 'local', model) for a task."""
+    """('claude' | 'local' | 'gemini' | ..., model) for a task."""
     lc = llm_cfg(cfg)
     spec = lc["tasks"].get(task, "claude") or "claude"
     kind, _, model = spec.partition(":")
-    if kind not in ("claude", "local"):
+    known = set(WORKER_KINDS) | set(getattr(squad(cfg), "WORKERS", {}) or {})
+    if kind not in known:
         kind, model = "claude", ""
     if not model:
-        model = lc["master"]["model"] if kind == "claude" else lc["worker"]["model"]
+        model = {"claude": lc["master"]["model"], "local": lc["worker"]["model"],
+                 "gemini": lc["gemini"]["model"]}.get(kind, "")
     return kind, model
 
 
@@ -87,12 +141,15 @@ def usage_summary(days: int = 30) -> dict:
     tot = {}
     for k in keys:
         for kind, b in data[k].items():
-            t = tot.setdefault(kind, {"calls": 0, "tokens_in": 0, "tokens_out": 0, "cost_usd": 0.0, "tasks": {}})
+            t = tot.setdefault(kind, {"calls": 0, "tokens_in": 0, "tokens_out": 0, "cost_usd": 0.0, "tasks": {},
+                                      "accounts": {}})
             for f in ("calls", "tokens_in", "tokens_out"):
                 t[f] += b.get(f, 0)
             t["cost_usd"] = round(t["cost_usd"] + b.get("cost_usd", 0), 4)
             for task, n in b.get("tasks", {}).items():
                 t["tasks"][task] = t["tasks"].get(task, 0) + n
+            for acc, n in (b.get("accounts") or {}).items():
+                t["accounts"][acc] = t["accounts"].get(acc, 0) + n
     return {"days": {k: data[k] for k in keys}, "total": tot}
 
 
@@ -162,20 +219,45 @@ def ask_local(prompt: str, cfg: dict | None = None, task: str = "worker", model:
     return text.strip()
 
 
+def ask_spec(kind: str, model: str, prompt: str, cfg: dict | None = None, task: str = "worker",
+             fallback: bool | None = None, **kw) -> str:
+    """Run one prompt on a named worker ("claude" | "local" | "gemini" | ...).
+    With agent-squad: it does the call (Gemini account rotation, fallback chain, shared usage ledger).
+    Without it: the built-in Claude / Ollama code below."""
+    cfg = cfg or load_config()
+    fb = llm_cfg(cfg)["fallback_to_claude"] if fallback is None else fallback
+    sq = squad(cfg)
+    if sq:
+        opts = {k: kw[k] for k in ("system", "json_mode", "temperature", "web") if k in kw and kw[k] is not None}
+        try:
+            r = sq.ask(f"{kind}:{model}" if model else kind, prompt, task=task, config=squad_config(cfg),
+                       fallback=["claude"] if fb and kind != "claude" else [], usage_file=USAGE, **opts)
+        except sq.WorkerError as e:
+            raise RuntimeError(str(e)) from e
+        return r.text
+    if kind == "claude":
+        return ask_claude(prompt, cfg, task, model or None, kw.get("web"))
+    if kind != "local":
+        msg = f"the '{kind}' worker needs agent-squad (pip install -e <path to agent-squad>)"
+        if not fb:
+            raise RuntimeError(msg)
+        print(f"  {msg}; falling back to Claude")
+        return ask_claude(prompt, cfg, task, None, kw.get("web"))
+    try:
+        return ask_local(prompt, cfg, task, model or None, **{k: v for k, v in kw.items()
+                                                            if k in ("system", "json_mode", "temperature")})
+    except RuntimeError as e:
+        if not fb:
+            raise
+        print(f"  worker failed ({e}); falling back to Claude")
+        return ask_claude(prompt, cfg, task, None, kw.get("web"))
+
+
 def ask(task: str, prompt: str, cfg: dict | None = None, **kw) -> str:
     """Send a prompt to whoever config.json says should do `task`."""
     cfg = cfg or load_config()
     kind, model = route(task, cfg)
-    if kind == "local":
-        try:
-            return ask_local(prompt, cfg, task, model, **{k: v for k, v in kw.items()
-                                                         if k in ("system", "json_mode", "temperature")})
-        except RuntimeError as e:
-            if not llm_cfg(cfg)["fallback_to_claude"]:
-                raise
-            print(f"  worker failed ({e}); falling back to Claude")
-            model = None
-    return ask_claude(prompt, cfg, task, model or None, kw.get("web"))
+    return ask_spec(kind, model, prompt, cfg, task, **kw)
 
 
 # ---------------------------------------------------------------- status
@@ -191,9 +273,27 @@ def ollama_status(cfg: dict | None = None) -> dict:
                 "error": str(e)}
 
 
+def gemini_status(cfg: dict | None = None) -> dict:
+    cfg = cfg or load_config()
+    sq = squad(cfg)
+    if not sq:
+        return {"available": False, "up": False, "accounts": [],
+                "help": "Install agent-squad to use Gemini: git clone https://github.com/rakeshnayak2001/agent-squad, "
+                        "then run its setup.bat"}
+    try:
+        st = sq.get_worker("gemini", squad_config(cfg)).status()
+    except Exception as e:  # noqa: BLE001
+        return {"available": True, "up": False, "accounts": [], "error": str(e)}
+    return {"available": True, **st}
+
+
 def status(cfg: dict | None = None) -> dict:
     cfg = cfg or load_config()
-    return {"claude_cli": bool(shutil.which("claude")), "ollama": ollama_status(cfg),
+    sq = squad(cfg)
+    return {"claude_cli": bool(shutil.which("claude")), "ollama": ollama_status(cfg), "gemini": gemini_status(cfg),
+            "squad": {"installed": bool(sq), "version": getattr(sq, "__version__", None),
+                      "path": os.path.dirname(os.path.dirname(sq.__file__)) if sq else None,
+                      "workers": sorted(getattr(sq, "WORKERS", {}) or [])},
             "routes": {t: route(t, cfg) for t in TASKS}, "fallback_to_claude": llm_cfg(cfg)["fallback_to_claude"]}
 
 
@@ -202,8 +302,8 @@ if __name__ == "__main__":
     if args[:1] == ["status"]:
         print(json.dumps(status(), indent=2))
     elif args[:1] == ["test"] and len(args) >= 3:
-        fn = ask_local if args[1] == "local" else ask_claude
-        print(fn(" ".join(args[2:]), task="test"))
+        kind, _, model = args[1].partition(":")
+        print(ask_spec(kind, model, " ".join(args[2:]), task="test", fallback=False))
     elif args[:1] == ["usage"]:
         print(json.dumps(usage_summary()["total"], indent=2))
     else:

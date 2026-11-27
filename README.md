@@ -110,6 +110,21 @@ If the worker is offline, its tasks fall back to Claude (`llm.fallback_to_claude
 Claude Code chat sessions also get a **`local-worker` MCP server** (`.mcp.json`), so commands like `/new-topics` can hand bulk text to the worker.
 Approve it the first time Claude Code asks. Usage per day is logged in `state\llm_usage.json` and shown on the dashboard.
 
+### Gemini as a worker (optional, via agent-squad)
+
+Gemini on your Google AI Pro accounts can take any task too (set it to `gemini` in `llm.tasks` or on the dashboard's
+Models page). It runs through **[agent-squad](https://github.com/rakeshnayak2001/agent-squad)**, a separate repo that
+holds the worker interface (Claude master; local, Gemini and later Codex workers). This app works without it; with it:
+
+```
+git clone https://github.com/rakeshnayak2001/agent-squad "C:\AI Vid\agent-squad"
+"C:\AI Vid\agent-squad\setup.bat"
+```
+`setup.bat` installs agent-squad and Gemini CLI and opens a Google sign-in for each of the two accounts (`acc1`, `acc2`).
+This app finds agent-squad when it is pip-installed, at `llm.squad_path`, or next to this folder (`..\agent-squad`).
+When an account hits its quota it cools down and the other one is used (`llm.gemini.rotation`: `failover` or `round_robin`);
+if both are out, the task falls back to Claude. The `local-worker` MCP tools take `worker="gemini"` as well.
+
 ---
 
 ## 1. Setup on Windows (one time)

@@ -122,6 +122,9 @@ select option{background:#14131c}
 .seg button.on{color:#111}
 .seg .thumb{position:absolute;top:4px;height:32px;border-radius:9px;background:var(--gold);transition:all .45s var(--ease);z-index:0}
 .seg.violet .thumb{background:var(--violet)}.seg.violet button.on{color:#fff}
+.seg.blue .thumb{background:#4f8cff}.seg.blue button.on{color:#fff}.seg button:disabled{opacity:.35;cursor:not-allowed}
+.acct{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.acct:first-child{border-top:0}.acct small{color:var(--muted);display:block}
 
 /* toggle */
 .tg{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0;cursor:pointer;user-select:none}
@@ -156,6 +159,7 @@ select option{background:#14131c}
   background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
 .badge.gold{color:var(--gold);border-color:rgba(233,180,76,.35);background:rgba(233,180,76,.08)}
 .badge.violet{color:#c4bbff;border-color:rgba(139,124,246,.35);background:rgba(139,124,246,.1)}
+.badge.blue{color:#9fc0ff;border-color:rgba(79,140,255,.35);background:rgba(79,140,255,.1)}
 .badge.ok{color:var(--ok);border-color:rgba(62,207,142,.3)}.badge.bad{color:#ff9d9a;border-color:rgba(239,83,80,.3)}
 
 /* usage bars */
@@ -235,6 +239,7 @@ select option{background:#14131c}
     <div class="side-foot">
       <div class="row"><span>Master</span><span id="sf-claude" class="row"><span class="dot"></span>…</span></div>
       <div class="row"><span>Worker</span><span id="sf-worker" class="row"><span class="dot"></span>…</span></div>
+      <div class="row"><span>Gemini</span><span id="sf-gemini" class="row"><span class="dot"></span>…</span></div>
       <div class="row"><span>Job</span><span id="sf-job" class="row"><span class="dot"></span>idle</span></div>
     </div>
   </aside>
@@ -271,8 +276,9 @@ select option{background:#14131c}
         <div class="card">
           <h2>Tokens · last 30 days</h2>
           <div class="spread"><div><div class="muted" style="font-size:12px">Claude (master)</div><div style="font-size:22px;font-weight:700" id="u-claude">0</div></div>
+            <div style="text-align:center"><div class="muted" style="font-size:12px">Gemini (worker, Pro plan)</div><div style="font-size:22px;font-weight:700;color:#9fc0ff" id="u-gemini">0</div></div>
             <div style="text-align:right"><div class="muted" style="font-size:12px">Local (worker, free)</div><div style="font-size:22px;font-weight:700;color:#c4bbff" id="u-local">0</div></div></div>
-          <div class="meter" style="margin:14px 0 8px"><i id="m-claude" style="width:0;background:linear-gradient(90deg,#d9902f,#E9B44C)"></i><i id="m-local" style="width:0;background:linear-gradient(90deg,#8b7cf6,#b8a8ff)"></i></div>
+          <div class="meter" style="margin:14px 0 8px"><i id="m-claude" style="width:0;background:linear-gradient(90deg,#d9902f,#E9B44C)"></i><i id="m-gemini" style="width:0;background:linear-gradient(90deg,#3b6fe0,#7aa7ff)"></i><i id="m-local" style="width:0;background:linear-gradient(90deg,#8b7cf6,#b8a8ff)"></i></div>
           <div class="muted" style="font-size:12px" id="u-share">No calls yet.</div>
           <div class="hr"></div>
           <div id="u-tasks" class="row"></div>
@@ -307,7 +313,7 @@ select option{background:#14131c}
 
     <!-- MODELS -->
     <section class="page" id="p-models">
-      <h1>Models</h1><p class="sub">Claude is the <b>master</b> (planning, scripts, fact-checks). A local Ollama model is the <b>worker</b> (repetitive jobs, free and private).</p>
+      <h1>Models</h1><p class="sub">Claude is the <b>master</b> (planning, scripts, fact-checks). <b>Workers</b> do the repetitive jobs: a local Ollama model (free and private) or Gemini on your Google AI Pro accounts.</p>
       <div class="grid g2 stagger">
         <div class="card">
           <div class="spread"><h2 style="margin:0">Master · Claude Code</h2><span class="badge" id="mClaudeBadge">…</span></div>
@@ -330,6 +336,21 @@ select option{background:#14131c}
             <button class="btn sm" onclick="pullModel()">Pull</button></div></label>
           <div class="chips" id="pullChips"></div>
           <div class="row" style="margin-top:14px"><button class="btn sm" onclick="run({action:'test_worker'})">Test worker</button></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px" id="geminiCard">
+        <div class="spread"><h2 style="margin:0">Worker · Gemini</h2><span class="badge" id="mGemBadge">…</span></div>
+        <p class="muted" style="font-size:12.5px" id="mGemHelp">Checking…</p>
+        <div id="gemOn">
+          <div class="grid g2" style="gap:10px">
+            <label class="f"><span>Model</span><input class="in" id="mGemModel" placeholder="gemini-3-pro-preview" list="gemModels"></label>
+            <datalist id="gemModels"><option>gemini-3-pro-preview</option><option>gemini-3-flash-preview</option><option>gemini-2.5-pro</option></datalist>
+            <label class="f"><span>When an account hits its limit</span><div class="seg" id="segRot"><div class="thumb"></div>
+              <button data-v="failover">Switch to the next (failover)</button><button data-v="round_robin">Take turns</button></div></label>
+          </div>
+          <div id="gemAccts" style="margin-top:6px"></div>
+          <div class="row" style="margin-top:14px"><button class="btn sm" onclick="run({action:'test_gemini'})">Test Gemini</button>
+            <button class="btn sm" onclick="run({action:'gemini_reset'})">Clear cooldowns</button></div>
         </div>
       </div>
       <div class="card" style="margin-top:16px">
@@ -448,13 +469,15 @@ async function refresh(){
   $('#st-credits-d').textContent=cr.length?`${cr.length} account(s), a film needs ~${S.film_cost}`:'not tracked yet';
   $('#sf-claude').innerHTML=`<span class="dot ${L.claude_cli?'ok':'bad'}"></span>${L.routes.script[1]||'default'}`;
   $('#sf-worker').innerHTML=`<span class="dot ${o.up&&o.model_ready?'ok':o.up?'warn':'bad'}"></span>${o.up?esc(o.model):'offline'}`;
-  const u=S.usage||{},c=u.claude||{},l=u.local||{},ct=(c.tokens_in||0)+(c.tokens_out||0),lt=(l.tokens_in||0)+(l.tokens_out||0);
-  countTo($('#u-claude'),ct,short);countTo($('#u-local'),lt,short);
-  const tot=ct+lt||1;$('#m-claude').style.width=(ct/tot*100)+'%';$('#m-local').style.width=(lt/tot*100)+'%';
-  $('#u-share').textContent=(c.calls||l.calls)?`${c.calls||0} Claude calls, ${l.calls||0} worker calls. ${Math.round(lt/tot*100)}% of tokens ran locally for free.`:'No calls yet. Stats fill in as videos are made.';
-  const tasks={...(c.tasks||{})};Object.entries(l.tasks||{}).forEach(([k,v])=>tasks['⚙ '+k]=v);
-  $('#u-tasks').innerHTML=Object.entries(tasks).map(([k,v])=>`<span class="badge ${k.startsWith('⚙')?'violet':'gold'}">${esc(k)} · ${v}</span>`).join('');
-  $('#bsWho').textContent=L.routes.ideas[0]==='local'?'worker · '+L.routes.ideas[1]:'claude';
+  const G=L.gemini||{},ga=G.accounts||[],gReady=ga.filter(a=>a.signed_in&&!a.cooldown_until).length;
+  $('#sf-gemini').innerHTML=!G.available?'<span class="dot"></span>not installed':`<span class="dot ${G.up&&gReady?'ok':G.up&&ga.length?'warn':'bad'}"></span>${G.up?`${gReady}/${ga.length} ready`:'CLI missing'}`;
+  const u=S.usage||{},c=u.claude||{},l=u.local||{},g=u.gemini||{},tk=b=>(b.tokens_in||0)+(b.tokens_out||0),ct=tk(c),lt=tk(l),gt=tk(g);
+  countTo($('#u-claude'),ct,short);countTo($('#u-local'),lt,short);countTo($('#u-gemini'),gt,short);
+  const tot=ct+lt+gt||1;$('#m-claude').style.width=(ct/tot*100)+'%';$('#m-gemini').style.width=(gt/tot*100)+'%';$('#m-local').style.width=(lt/tot*100)+'%';
+  $('#u-share').textContent=(c.calls||l.calls||g.calls)?`${c.calls||0} Claude, ${g.calls||0} Gemini, ${l.calls||0} local calls. ${Math.round((lt+gt)/tot*100)}% of tokens ran on workers.`:'No calls yet. Stats fill in as videos are made.';
+  const tasks={...(c.tasks||{})};Object.entries(l.tasks||{}).forEach(([k,v])=>tasks['⚙ '+k]=v);Object.entries(g.tasks||{}).forEach(([k,v])=>tasks['✦ '+k]=v);
+  $('#u-tasks').innerHTML=Object.entries(tasks).map(([k,v])=>`<span class="badge ${k.startsWith('⚙')?'violet':k.startsWith('✦')?'blue':'gold'}">${esc(k)} · ${v}</span>`).join('');
+  const ir=L.routes.ideas;$('#bsWho').textContent=ir[0]==='claude'?'claude':`${ir[0]==='local'?'worker':ir[0]} · ${ir[1]}`;
   jobUi(S.job);
 }
 function jobUi(j){const run=j.running;['#prog1','#prog2','#prog3'].forEach(s=>$(s).classList.toggle('on',run));
@@ -496,16 +519,31 @@ async function renderModels(){CFG=await api('/api/config');if(!S.llm)await refre
   const models=[...new Set([...(o.models||[]),w.model||'qwen3:8b'])];$('#mWorkerModel').innerHTML=models.map(m=>`<option ${m===w.model?'selected':''}>${esc(m)}</option>`).join('');
   $('#mTemp').value=w.temperature??0.3;$('#tVal').textContent=$('#mTemp').value;$('#mUrl').value=w.url||'http://localhost:11434';
   $('#pullChips').innerHTML=['qwen3:4b','qwen3:8b','qwen3:14b','gemma3:12b','llama3.2:3b'].map(m=>`<button class="chip" onclick="$('#mPull').value='${m}'">${m}</button>`).join('');
-  const tasks={...{script:'claude',topic_plan:'claude',json_repair:'local',ideas:'local'},...(L.tasks||{})};
+  const G=S.llm.gemini||{},gcfg=L.gemini||{};
+  $('#mGemBadge').textContent=!G.available?'agent-squad not installed':G.up?'CLI found':'gemini CLI missing';$('#mGemBadge').className='badge '+(G.available&&G.up?'ok':'bad');
+  $('#mGemHelp').innerHTML=!G.available?esc(G.help||'Install agent-squad to use Gemini.'):
+    `Runs the Gemini CLI headless on your Google AI Pro sign-ins (no API key), through agent-squad${S.llm.squad&&S.llm.squad.path?` at <span class="mono">${esc(S.llm.squad.path)}</span>`:''}.`+(G.up?'':` Install the CLI: <span class="mono">${esc(G.help||'npm install -g @google/gemini-cli')}</span>`);
+  $('#gemOn').style.display=G.available?'':'none';
+  $('#mGemModel').value=gcfg.model||G.model||'gemini-3-pro-preview';segSet('segRot',gcfg.rotation||G.rotation||'failover');
+  $('#gemAccts').innerHTML=(G.accounts||[]).map(a=>{const st=a.cooldown_until?['warn',`cooling down until ${new Date(a.cooldown_until).toLocaleString()}`]:
+      a.needs_login||!a.signed_in?['bad','not signed in']:['ok','ready'];
+    return `<div class="acct"><span class="dot ${st[0]}"></span><div><b>${esc(a.label||a.name)}</b> <span class="mono muted">${esc(a.name)}</span>
+      <small>${st[1]} · ${a.calls_today||0} call(s) today${a.last_error&&st[0]!=='ok'?' · '+esc(a.last_error.slice(0,90)):''}</small></div>
+      <button class="btn sm" onclick="gemLogin('${esc(a.name)}')">${a.signed_in?'Sign in again':'Sign in'}</button></div>`}).join('');
+  const tasks={...{script:'claude',topic_plan:'claude',json_repair:'local',ideas:'local'},...(L.tasks||{})};const gOk=!!G.available;
+  const tint=v=>v==='local'?'violet':v==='gemini'?'blue':'';
   $('#routes').innerHTML=Object.entries(TASKS).map(([k,[t,d]])=>{const v=(tasks[k]||'claude').split(':')[0];return `<div class="route"><div><b>${t}</b><small>${d}</small></div>
-    <div class="seg ${v==='local'?'violet':''}" id="r-${k}"><div class="thumb"></div><button data-v="claude" class="${v==='claude'?'on':''}">Claude</button><button data-v="local" class="${v==='local'?'on':''}">Local</button></div></div>`}).join('');
-  Object.keys(TASKS).forEach(k=>{const seg=$('#r-'+k);seg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;segSet(seg.id,b.dataset.v);seg.classList.toggle('violet',b.dataset.v==='local');});});
+    <div class="seg ${tint(v)}" id="r-${k}"><div class="thumb"></div><button data-v="claude" class="${v==='claude'?'on':''}">Claude</button><button data-v="local" class="${v==='local'?'on':''}">Local</button><button data-v="gemini" class="${v==='gemini'?'on':''}" ${gOk||v==='gemini'?'':'disabled title="Install agent-squad first"'}>Gemini</button></div></div>`}).join('');
+  Object.keys(TASKS).forEach(k=>{const seg=$('#r-'+k);seg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;segSet(seg.id,b.dataset.v);seg.classList.remove('violet','blue');const t=tint(b.dataset.v);if(t)seg.classList.add(t);});});
   requestAnimationFrame(()=>$$('.seg').forEach(placeThumb));}
 $('#mTemp').oninput=e=>$('#tVal').textContent=e.target.value;
 async function saveModels(){const tasks={};Object.keys(TASKS).forEach(k=>tasks[k]=segVal('r-'+k));
   try{await api('/api/config/patch',{set:{'llm.master.model':segVal('segMaster'),'claude.model':segVal('segMaster'),'claude.allow_web_search':$('#mWeb').checked,
-    'llm.fallback_to_claude':$('#mFallback').checked,'llm.worker.model':$('#mWorkerModel').value,'llm.worker.temperature':+$('#mTemp').value,'llm.worker.url':$('#mUrl').value.trim(),'llm.tasks':tasks}});
+    'llm.fallback_to_claude':$('#mFallback').checked,'llm.worker.model':$('#mWorkerModel').value,'llm.worker.temperature':+$('#mTemp').value,'llm.worker.url':$('#mUrl').value.trim(),'llm.tasks':tasks,
+    ...((S.llm.gemini||{}).available?{'llm.gemini.model':$('#mGemModel').value.trim()||'gemini-3-pro-preview','llm.gemini.rotation':segVal('segRot')||'failover'}:{})}});
     toast('Model settings saved','ok');refresh();}catch(e){toast(e.message,'bad');}}
+async function gemLogin(name){try{const r=await api('/api/gemini/login',{account:name});
+  toast(r.ok?'A sign-in window opened. Choose "Sign in with Google", then type /quit':`Run this in a terminal: ${r.command}`,'ok');}catch(e){toast(e.message,'bad');}}
 function pullModel(){const m=$('#mPull').value.trim();if(!m)return toast('Type a model name','bad');run({action:'pull_model',model:m});}
 
 /* ---------- topics ---------- */

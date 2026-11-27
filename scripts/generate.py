@@ -221,13 +221,15 @@ def ask_claude(prompt: str, cfg: dict, task: str = "script") -> str:
 def repair_json(reply: str, error: str, checker, cfg: dict) -> dict | None:
     """Ask the worker to fix an invalid reply instead of paying for a whole new Claude script."""
     import llm
-    if llm.route("json_repair", cfg)[0] != "local":
+    if llm.route("json_repair", cfg)[0] == "claude":
         return None
     prompt = (f"The JSON below is invalid. Error: {error}\n"
               "Fix ONLY what the error describes. Keep every other field and all wording exactly the same. "
               "Output only the corrected JSON object.\n\n" + reply[:30000])
     try:
-        fixed = extract_json(llm.ask_local(prompt, cfg, "json_repair", json_mode=True, temperature=0))
+        kind, model = llm.route("json_repair", cfg)
+        fixed = extract_json(llm.ask_spec(kind, model, prompt, cfg, "json_repair", fallback=False,
+                                          json_mode=True, temperature=0))
         checker(fixed)
         print("  worker repaired the JSON (no extra Claude call)")
         return fixed
