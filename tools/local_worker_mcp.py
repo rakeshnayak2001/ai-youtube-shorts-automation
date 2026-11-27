@@ -2,7 +2,7 @@
 
 Registered for this project in .mcp.json, so in Claude Code (/make-video, /new-topics, ...)
 Claude (the master) can hand repetitive work to a worker and only read a short status line.
-Every tool takes worker="local" (default, free) or "gemini" (Google AI Pro accounts, needs agent-squad),
+Every tool takes worker="local" (default, free) or "gemini" (Gemini API keys, needs agent-squad),
 or "<worker>:<model>". Settings come from config.json -> llm.
 
     pip install mcp            (in requirements.txt)
@@ -50,7 +50,7 @@ def list_worker_models() -> str:
 def worker_generate(prompt: str, system: str = "", model: str = "", json_mode: bool = False,
                     worker: str = "local") -> str:
     """Give ONE small, well-specified task to a worker LLM and return its answer.
-    worker: "local" (free Ollama) or "gemini" (Gemini on the Google AI Pro accounts).
+    worker: "local" (free Ollama) or "gemini" (Gemini API with your keys).
     Good for: brainstorming lists, rewording, classifying, extracting fields, formatting.
     Not for: facts you must be sure of, final scripts, decisions. Review what it returns."""
     out = _ask(prompt, system, model, json_mode, worker)

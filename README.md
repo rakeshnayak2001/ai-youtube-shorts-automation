@@ -112,7 +112,7 @@ Approve it the first time Claude Code asks. Usage per day is logged in `state\ll
 
 ### Gemini as a worker (optional, via agent-squad)
 
-Gemini on your Google AI Pro accounts can take any task too (set it to `gemini` in `llm.tasks` or on the dashboard's
+Gemini (through Google AI Studio API keys) can take any task too (set it to `gemini` in `llm.tasks` or on the dashboard's
 Models page). It runs through **[agent-squad](https://github.com/rakeshnayak2001/agent-squad)**, a separate repo that
 holds the worker interface (Claude master; local, Gemini and later Codex workers). This app works without it; with it:
 
@@ -120,9 +120,12 @@ holds the worker interface (Claude master; local, Gemini and later Codex workers
 git clone https://github.com/rakeshnayak2001/agent-squad "C:\AI Vid\agent-squad"
 "C:\AI Vid\agent-squad\setup.bat"
 ```
-`setup.bat` installs agent-squad and Gemini CLI and opens a Google sign-in for each of the two accounts (`acc1`, `acc2`).
+`setup.bat` installs agent-squad and asks for one or two Gemini API keys from https://aistudio.google.com/apikey (slots `acc1`, `acc2`;
+keys from two Google accounts give two quotas). Or add them later with **Add key** on the dashboard's Models page.
+Gemini CLI no longer accepts Google AI Pro sign-ins, so the API key is the supported route; API use is billed by AI Studio
+(free tier first), not covered by the Pro subscription.
 This app finds agent-squad when it is pip-installed, at `llm.squad_path`, or next to this folder (`..\agent-squad`).
-When an account hits its quota it cools down and the other one is used (`llm.gemini.rotation`: `failover` or `round_robin`);
+When a key hits its quota it cools down and the other one is used (`llm.gemini.rotation`: `failover` or `round_robin`);
 if both are out, the task falls back to Claude. The `local-worker` MCP tools take `worker="gemini"` as well.
 
 ---
