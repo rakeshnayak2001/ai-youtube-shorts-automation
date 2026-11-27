@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "local-worker": {
+      "command": "python",
+      "args": ["tools/local_worker_mcp.py"]
+    }
+  }
+}

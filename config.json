@@ -129,5 +129,24 @@
     "plan_with_events": true,
     "lookahead_days": 14,
     "region": "India"
+  },
+  "llm": {
+    "note": "Claude = master (scripts, fact-checks, timely topics). Local Ollama model = worker (repetitive jobs). Task values: claude, claude:<sonnet|opus|haiku>, local, local:<ollama model>.",
+    "master": {
+      "model": ""
+    },
+    "worker": {
+      "url": "http://localhost:11434",
+      "model": "qwen3:8b",
+      "temperature": 0.3,
+      "timeout": 600
+    },
+    "tasks": {
+      "script": "claude",
+      "topic_plan": "claude",
+      "json_repair": "local",
+      "ideas": "local"
+    },
+    "fallback_to_claude": true
   }
 }

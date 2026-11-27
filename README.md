@@ -80,6 +80,36 @@ Run `schedule_daily_2pm.bat` once to create both Windows tasks. Keep the PC on a
 **Credits:** tracked per Google account in `state\credits.json` (`python scripts\credits.py show`).
 Films continue while any account can afford one (about 130 credits for 10 shots); otherwise it's stickman until a refresh.
 
+## Control room dashboard
+
+Double-click **`dashboard.bat`** (or `python dashboard\server.py`) and it opens **http://127.0.0.1:8765**:
+
+- **Overview**: today's video, worker status, topic queues, Flow credits, live job log, and how many tokens ran on Claude vs. the free local model.
+- **Create**: pick format + topic, toggle upload / topic planner, and start a run. You can watch the output stream live.
+- **Models**: choose the Claude model (Default / Haiku / Sonnet / Opus), pick or pull an Ollama model, and decide **who does each task**.
+- **Topics**: edit both queues (reorder, delete, re-queue) and brainstorm new topics with the local model.
+- **Library**: every script and render. You can play videos and run voice + render, render + upload, or a preview with missing clips.
+- **Settings**: common switches plus a raw `config.json` editor (it keeps a backup in `state\config.backup.json`).
+
+It only listens on your own PC (127.0.0.1) and needs nothing beyond Python.
+
+## Claude master + local worker (saves tokens)
+
+Claude does the work that needs judgement: writing and fact-checking scripts, and planning timely topics with web search.
+A free local model running in [Ollama](https://ollama.com) does the repetitive work:
+
+| Task (`config.json -> llm.tasks`) | Default | Why |
+|---|---|---|
+| `script` | `claude` | accuracy + web search |
+| `topic_plan` | `claude` | searches upcoming festivals/events |
+| `json_repair` | `local` | fixes a malformed script instead of paying for a whole new Claude call |
+| `ideas` | `local` | brainstorms topic lists (`python scripts\ideas.py cinematic --n 15`) |
+
+Setup: double-click **`setup_local_llm.bat`**. It installs Ollama, downloads `llm.worker.model` (default `qwen3:8b`, ~5 GB, needs about 8 GB of VRAM; use `qwen3:4b` on smaller GPUs) and runs a test.
+If the worker is offline, its tasks fall back to Claude (`llm.fallback_to_claude`).
+Claude Code chat sessions also get a **`local-worker` MCP server** (`.mcp.json`), so commands like `/new-topics` can hand bulk text to the worker.
+Approve it the first time Claude Code asks. Usage per day is logged in `state\llm_usage.json` and shown on the dashboard.
+
 ---
 
 ## 1. Setup on Windows (one time)
