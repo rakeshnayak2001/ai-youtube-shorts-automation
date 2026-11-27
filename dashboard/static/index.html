@@ -523,7 +523,7 @@ async function renderModels(){CFG=await api('/api/config');if(!S.llm)await refre
   $('#pullChips').innerHTML=['qwen3:4b','qwen3:8b','qwen3:14b','gemma3:12b','llama3.2:3b'].map(m=>`<button class="chip" onclick="$('#mPull').value='${m}'">${m}</button>`).join('');
   const G=S.llm.gemini||{},gcfg=L.gemini||{};
   const B=G.backend||'api',isApi=B==='api',isAgy=B==='agy',acc=G.accounts||[];
-  $('#mGemBadge').textContent=!G.available?'agent-squad not installed':isAgy?(!G.up?'agy not installed':acc.some(x=>x.signed_in)?'Pro plan · signed in':'Pro plan · sign in needed'):
+  $('#mGemBadge').textContent=!G.available?'agent-squad not installed':isAgy?(!G.up?'agy not installed':acc.some(x=>x.signed_in)?'Pro plan · working':acc.some(x=>x.signed_in===false)?'Pro plan · sign in needed':'Pro plan · not tested yet'):
     isApi?(acc.some(x=>x.signed_in)?'API key saved':'no API key yet'):G.up?'CLI found':'gemini CLI missing';
   $('#mGemBadge').className='badge '+(G.available&&G.up&&acc.some(x=>x.signed_in)?'ok':G.available&&G.up?'gold':'bad');
   const where=S.llm.squad&&S.llm.squad.path?` at <span class="mono">${esc(S.llm.squad.path)}</span>`:'';
@@ -538,7 +538,7 @@ async function renderModels(){CFG=await api('/api/config');if(!S.llm)await refre
   segSet('segRot',gcfg.rotation||G.rotation||'failover');
   $('#gemAccts').innerHTML=acc.map(a=>{const st=a.cooldown_until?['warn',`quota used up, back at ${new Date(a.cooldown_until).toLocaleString()}`]:
       a.needs_login||a.signed_in===false?['bad',isApi?(a.signed_in?'key rejected':'no key yet'):'not signed in']:
-      a.signed_in==null?['warn','not checked yet: sign in, then Test Gemini']:['ok','ready'];
+      a.signed_in==null?['warn',isAgy?'not tested yet: click Test Gemini (sign in first if you haven\'t)':'not checked yet']:['ok','ready'];
     return `<div class="acct"><span class="dot ${st[0]}"></span><div><b>${esc(a.label||a.name)}</b> <span class="mono muted">${esc(a.name)}</span>
       <small>${st[1]} · ${a.calls_today||0} call(s) today${a.last_error&&st[0]!=='ok'?' · '+esc(a.last_error.slice(0,90)):''}</small></div>
       <button class="btn sm" onclick="gemLogin('${esc(a.name)}')">${isApi?(a.signed_in?'Replace key':'Add key'):(a.signed_in?'Sign in again':'Sign in')}</button></div>`}).join('');
