@@ -131,7 +131,7 @@
     "region": "India"
   },
   "llm": {
-    "note": "Claude = master (scripts, fact-checks, timely topics). Local Ollama model = worker (repetitive jobs). Task values: claude, claude:<sonnet|opus|haiku>, local, local:<ollama model>.",
+    "note": "Claude = master (scripts, fact-checks, timely topics). Workers = repetitive jobs: local Ollama model (free) or Gemini on Google AI Pro accounts (needs agent-squad). Task values: claude, claude:<sonnet|opus|haiku>, local, local:<ollama model>, gemini, gemini:<model>.",
     "master": {
       "model": ""
     },
@@ -141,12 +141,17 @@
       "temperature": 0.3,
       "timeout": 600
     },
+    "gemini": {
+      "model": "gemini-3-pro-preview",
+      "rotation": "failover"
+    },
     "tasks": {
       "script": "claude",
       "topic_plan": "claude",
       "json_repair": "local",
       "ideas": "local"
     },
-    "fallback_to_claude": true
+    "fallback_to_claude": true,
+    "squad_path": ""
   }
 }

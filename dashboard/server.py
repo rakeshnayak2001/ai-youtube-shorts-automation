@@ -3,7 +3,7 @@
     python dashboard/server.py            (or double-click dashboard.bat)
     -> http://127.0.0.1:8765
 
-Start videos, watch the live log, switch models (Claude master / local worker), edit the topic queues
+Start videos, watch the live log, switch models (Claude master / local or Gemini worker), edit the topic queues
 and config, and play finished videos. Listens on 127.0.0.1 only. Uses only the Python standard library.
 """
 import json
@@ -123,10 +123,40 @@ def build_command(body: dict) -> tuple[str, list[str]]:
     if a == "test_worker":
         return "Test worker", [PY, "-u", "scripts/llm.py", "test", "local",
                                body.get("prompt") or "In one sentence, who are you?"]
+    if a == "test_gemini":
+        return "Test Gemini", [PY, "-u", "scripts/llm.py", "test", "gemini",
+                               body.get("prompt") or "In one sentence, who are you?"]
+    if a == "gemini_reset":
+        sq = llm.squad()
+        if not sq:
+            raise RuntimeError("agent-squad is not installed (see the Models page)")
+        return "Reset Gemini cooldowns", [PY, "-u", "-c", _GEMINI_RESET]
     if a == "test_master":
         return "Test Claude", [PY, "-u", "scripts/llm.py", "test", "claude",
                                body.get("prompt") or "In one sentence, who are you?"]
     raise RuntimeError(f"unknown action {a!r}")
+
+
+_GEMINI_RESET = ("import sys; sys.path.insert(0, 'scripts'); import llm; "
+                 "w = llm.squad().get_worker('gemini', llm.squad_config()); w.pool.reset(); "
+                 "print('Cooldowns cleared for: ' + ', '.join(a['name'] for a in w.status()['accounts']))")
+
+
+def gemini_login(account: str) -> dict:
+    """Open a new terminal window with the Gemini sign-in for one account (it is interactive)."""
+    sq = llm.squad()
+    if not sq:
+        raise RuntimeError("agent-squad is not installed (see the Models page)")
+    names = [a["name"] for a in llm.gemini_status().get("accounts", [])]
+    if account not in names:
+        raise RuntimeError(f"unknown Gemini account {account!r}")
+    path = os.path.dirname(os.path.dirname(sq.__file__))
+    cmd = [PY, "-m", "agent_squad", "gemini", "login", account]
+    if not common.IS_WINDOWS:
+        return {"ok": False, "command": " ".join(cmd)}
+    env = {**os.environ, "PYTHONPATH": path + os.pathsep + os.environ.get("PYTHONPATH", "")}
+    subprocess.Popen(cmd, cwd=path, env=env, creationflags=subprocess.CREATE_NEW_CONSOLE)
+    return {"ok": True}
 
 
 # ---------------------------------------------------------------- data for the UI
@@ -250,14 +280,27 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as e:  # noqa: BLE001
             return self._json({"error": str(e)}, 500)
 
+    def _same_origin(self) -> bool:
+        """Block other web pages from driving the dashboard (they can POST to localhost too).
+        A JSON content type forces a CORS preflight, which this server never answers, and a
+        foreign Origin header is refused outright."""
+        origin = self.headers.get("Origin")
+        if origin and origin not in (f"http://127.0.0.1:{PORT}", f"http://localhost:{PORT}"):
+            return False
+        return (self.headers.get("Content-Type") or "").split(";")[0].strip() == "application/json"
+
     def do_POST(self):  # noqa: N802
         p = urllib.parse.urlparse(self.path).path
+        if not self._same_origin():
+            return self._json({"error": "cross-site request refused"}, 403)
         try:
             body = self._body()
             if p == "/api/run":
                 name, cmd = build_command(body)
                 JOB.start(name, cmd)
                 return self._json({"ok": True, "job": JOB.info()})
+            if p == "/api/gemini/login":
+                return self._json(gemini_login(str(body.get("account", ""))))
             if p == "/api/job/stop":
                 JOB.stop()
                 return self._json({"ok": True})
