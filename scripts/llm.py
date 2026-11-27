@@ -76,7 +76,7 @@ def squad(cfg: dict | None = None):
 
 def squad_config(cfg: dict | None = None) -> dict:
     """This app's model settings as an agent-squad config, layered over ~/.agent-squad/squad.json.
-    Gemini account sign-ins and cooldowns live in agent-squad's own folders, so they are shared."""
+    Gemini API keys and cooldowns live in agent-squad's own folders, so they are shared."""
     cfg = cfg or load_config()
     sq = squad(cfg)
     lc = llm_cfg(cfg)

@@ -124,7 +124,7 @@ select option{background:#14131c}
 .seg.violet .thumb{background:var(--violet)}.seg.violet button.on{color:#fff}
 .seg.blue .thumb{background:#4f8cff}.seg.blue button.on{color:#fff}.seg button:disabled{opacity:.35;cursor:not-allowed}
 .acct{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
-.acct:first-child{border-top:0}.acct small{color:var(--muted);display:block}
+.acct:first-child{border-top:0}#mGemHelp a{color:#9fc0ff}.acct small{color:var(--muted);display:block}
 
 /* toggle */
 .tg{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0;cursor:pointer;user-select:none}
@@ -276,7 +276,7 @@ select option{background:#14131c}
         <div class="card">
           <h2>Tokens · last 30 days</h2>
           <div class="spread"><div><div class="muted" style="font-size:12px">Claude (master)</div><div style="font-size:22px;font-weight:700" id="u-claude">0</div></div>
-            <div style="text-align:center"><div class="muted" style="font-size:12px">Gemini (worker, Pro plan)</div><div style="font-size:22px;font-weight:700;color:#9fc0ff" id="u-gemini">0</div></div>
+            <div style="text-align:center"><div class="muted" style="font-size:12px">Gemini (worker, API)</div><div style="font-size:22px;font-weight:700;color:#9fc0ff" id="u-gemini">0</div></div>
             <div style="text-align:right"><div class="muted" style="font-size:12px">Local (worker, free)</div><div style="font-size:22px;font-weight:700;color:#c4bbff" id="u-local">0</div></div></div>
           <div class="meter" style="margin:14px 0 8px"><i id="m-claude" style="width:0;background:linear-gradient(90deg,#d9902f,#E9B44C)"></i><i id="m-gemini" style="width:0;background:linear-gradient(90deg,#3b6fe0,#7aa7ff)"></i><i id="m-local" style="width:0;background:linear-gradient(90deg,#8b7cf6,#b8a8ff)"></i></div>
           <div class="muted" style="font-size:12px" id="u-share">No calls yet.</div>
@@ -313,7 +313,7 @@ select option{background:#14131c}
 
     <!-- MODELS -->
     <section class="page" id="p-models">
-      <h1>Models</h1><p class="sub">Claude is the <b>master</b> (planning, scripts, fact-checks). <b>Workers</b> do the repetitive jobs: a local Ollama model (free and private) or Gemini on your Google AI Pro accounts.</p>
+      <h1>Models</h1><p class="sub">Claude is the <b>master</b> (planning, scripts, fact-checks). <b>Workers</b> do the repetitive jobs: a local Ollama model (free and private) or Gemini through your Google AI Studio API keys.</p>
       <div class="grid g2 stagger">
         <div class="card">
           <div class="spread"><h2 style="margin:0">Master · Claude Code</h2><span class="badge" id="mClaudeBadge">…</span></div>
@@ -345,7 +345,7 @@ select option{background:#14131c}
           <div class="grid g2" style="gap:10px">
             <label class="f"><span>Model</span><input class="in" id="mGemModel" placeholder="gemini-3-pro-preview" list="gemModels"></label>
             <datalist id="gemModels"><option>gemini-3-pro-preview</option><option>gemini-3-flash-preview</option><option>gemini-2.5-pro</option></datalist>
-            <label class="f"><span>When an account hits its limit</span><div class="seg" id="segRot"><div class="thumb"></div>
+            <label class="f"><span>When a key hits its limit</span><div class="seg" id="segRot"><div class="thumb"></div>
               <button data-v="failover">Switch to the next (failover)</button><button data-v="round_robin">Take turns</button></div></label>
           </div>
           <div id="gemAccts" style="margin-top:6px"></div>
@@ -520,16 +520,18 @@ async function renderModels(){CFG=await api('/api/config');if(!S.llm)await refre
   $('#mTemp').value=w.temperature??0.3;$('#tVal').textContent=$('#mTemp').value;$('#mUrl').value=w.url||'http://localhost:11434';
   $('#pullChips').innerHTML=['qwen3:4b','qwen3:8b','qwen3:14b','gemma3:12b','llama3.2:3b'].map(m=>`<button class="chip" onclick="$('#mPull').value='${m}'">${m}</button>`).join('');
   const G=S.llm.gemini||{},gcfg=L.gemini||{};
-  $('#mGemBadge').textContent=!G.available?'agent-squad not installed':G.up?'CLI found':'gemini CLI missing';$('#mGemBadge').className='badge '+(G.available&&G.up?'ok':'bad');
+  $('#mGemBadge').textContent=!G.available?'agent-squad not installed':G.backend!=='cli'?((G.accounts||[]).some(x=>x.signed_in)?'API key saved':'no API key yet'):G.up?'CLI found':'gemini CLI missing';$('#mGemBadge').className='badge '+(G.available&&G.up?'ok':'bad');
   $('#mGemHelp').innerHTML=!G.available?esc(G.help||'Install agent-squad to use Gemini.'):
-    `Runs the Gemini CLI headless on your Google AI Pro sign-ins (no API key), through agent-squad${S.llm.squad&&S.llm.squad.path?` at <span class="mono">${esc(S.llm.squad.path)}</span>`:''}.`+(G.up?'':` Install the CLI: <span class="mono">${esc(G.help||'npm install -g @google/gemini-cli')}</span>`);
+    (G.backend==='cli'?`Runs a Gemini CLI headless`:`Calls the Gemini API with your Google AI Studio keys (one per slot; get one at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>)`)+
+    `, through agent-squad${S.llm.squad&&S.llm.squad.path?` at <span class="mono">${esc(S.llm.squad.path)}</span>`:''}.`+(G.up?'':` Install the CLI: <span class="mono">${esc(G.help||'npm install -g @google/gemini-cli')}</span>`);
+  const isApi=G.backend!=='cli';
   $('#gemOn').style.display=G.available?'':'none';
   $('#mGemModel').value=gcfg.model||G.model||'gemini-3-pro-preview';segSet('segRot',gcfg.rotation||G.rotation||'failover');
   $('#gemAccts').innerHTML=(G.accounts||[]).map(a=>{const st=a.cooldown_until?['warn',`cooling down until ${new Date(a.cooldown_until).toLocaleString()}`]:
-      a.needs_login||!a.signed_in?['bad','not signed in']:['ok','ready'];
+      a.needs_login||!a.signed_in?['bad',isApi?(a.signed_in?'key rejected':'no key yet'):'not signed in']:['ok','ready'];
     return `<div class="acct"><span class="dot ${st[0]}"></span><div><b>${esc(a.label||a.name)}</b> <span class="mono muted">${esc(a.name)}</span>
       <small>${st[1]} · ${a.calls_today||0} call(s) today${a.last_error&&st[0]!=='ok'?' · '+esc(a.last_error.slice(0,90)):''}</small></div>
-      <button class="btn sm" onclick="gemLogin('${esc(a.name)}')">${a.signed_in?'Sign in again':'Sign in'}</button></div>`}).join('');
+      <button class="btn sm" onclick="gemLogin('${esc(a.name)}')">${isApi?(a.signed_in?'Replace key':'Add key'):(a.signed_in?'Sign in again':'Sign in')}</button></div>`}).join('');
   const tasks={...{script:'claude',topic_plan:'claude',json_repair:'local',ideas:'local'},...(L.tasks||{})};const gOk=!!G.available;
   const tint=v=>v==='local'?'violet':v==='gemini'?'blue':'';
   $('#routes').innerHTML=Object.entries(TASKS).map(([k,[t,d]])=>{const v=(tasks[k]||'claude').split(':')[0];return `<div class="route"><div><b>${t}</b><small>${d}</small></div>
@@ -543,7 +545,7 @@ async function saveModels(){const tasks={};Object.keys(TASKS).forEach(k=>tasks[k
     ...((S.llm.gemini||{}).available?{'llm.gemini.model':$('#mGemModel').value.trim()||'gemini-3-pro-preview','llm.gemini.rotation':segVal('segRot')||'failover'}:{})}});
     toast('Model settings saved','ok');refresh();}catch(e){toast(e.message,'bad');}}
 async function gemLogin(name){try{const r=await api('/api/gemini/login',{account:name});
-  toast(r.ok?'A sign-in window opened. Choose "Sign in with Google", then type /quit':`Run this in a terminal: ${r.command}`,'ok');}catch(e){toast(e.message,'bad');}}
+  toast(r.ok?((S.llm.gemini||{}).backend==='cli'?'A sign-in window opened. Finish the sign-in, then type /quit':'A window opened: paste your API key there and press Enter, then refresh this page'):`Run this in a terminal: ${r.command}`,'ok');}catch(e){toast(e.message,'bad');}}
 function pullModel(){const m=$('#mPull').value.trim();if(!m)return toast('Type a model name','bad');run({action:'pull_model',model:m});}
 
 /* ---------- topics ---------- */

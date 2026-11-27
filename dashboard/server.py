@@ -143,7 +143,7 @@ _GEMINI_RESET = ("import sys; sys.path.insert(0, 'scripts'); import llm; "
 
 
 def gemini_login(account: str) -> dict:
-    """Open a new terminal window with the Gemini sign-in for one account (it is interactive)."""
+    """Open a new terminal window to add an API key (or sign in, cli backend) for one Gemini slot."""
     sq = llm.squad()
     if not sq:
         raise RuntimeError("agent-squad is not installed (see the Models page)")
