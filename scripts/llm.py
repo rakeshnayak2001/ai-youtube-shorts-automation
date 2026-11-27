@@ -98,7 +98,8 @@ def llm_cfg(cfg: dict | None = None) -> dict:
     gemini = {"model": "gemini-3-pro-preview", "rotation": "failover", **(c.get("gemini") or {})}
     return {"master": master, "worker": worker, "gemini": gemini,
             "tasks": {**DEFAULT_TASKS, **(c.get("tasks") or {})},
-            "fallback_to_claude": c.get("fallback_to_claude", True)}
+            "fallback_to_claude": c.get("fallback_to_claude", True),
+            "worker_fallback": c.get("worker_fallback", ["local"])}
 
 
 def route(task: str, cfg: dict | None = None) -> tuple[str, str]:
@@ -110,9 +111,31 @@ def route(task: str, cfg: dict | None = None) -> tuple[str, str]:
     if kind not in known:
         kind, model = "claude", ""
     if not model:
+        gem_model = lc["gemini"]["model"]
+        if kind == "gemini" and gemini_backend(cfg) == "agy":
+            gem_model = lc["gemini"].get("agy_model", "")  # agy has its own model names ("" = its default)
         model = {"claude": lc["master"]["model"], "local": lc["worker"]["model"],
-                 "gemini": lc["gemini"]["model"]}.get(kind, "")
+                 "gemini": gem_model}.get(kind, "")
     return kind, model
+
+
+def gemini_backend(cfg: dict | None = None) -> str:
+    """'api' (AI Studio keys), 'agy' (Pro plan via Antigravity CLI) or 'cli'. Needs agent-squad."""
+    cfg = cfg or load_config()
+    b = llm_cfg(cfg)["gemini"].get("backend")
+    if not b and squad(cfg):
+        b = ((squad_config(cfg).get("workers") or {}).get("gemini") or {}).get("backend")
+    return b or "api"
+
+
+def fallback_chain(kind: str, cfg: dict | None = None) -> list[str]:
+    """Who takes over when a worker fails or runs out of quota: llm.worker_fallback (default: the local
+    model), then Claude if llm.fallback_to_claude."""
+    lc = llm_cfg(cfg)
+    chain = [w for w in lc["worker_fallback"] if w.partition(":")[0] != kind and kind != "claude"]
+    if lc["fallback_to_claude"] and kind != "claude":
+        chain.append("claude")
+    return chain
 
 
 # ---------------------------------------------------------------- usage ledger
@@ -231,7 +254,8 @@ def ask_spec(kind: str, model: str, prompt: str, cfg: dict | None = None, task: 
         opts = {k: kw[k] for k in ("system", "json_mode", "temperature", "web") if k in kw and kw[k] is not None}
         try:
             r = sq.ask(f"{kind}:{model}" if model else kind, prompt, task=task, config=squad_config(cfg),
-                       fallback=["claude"] if fb and kind != "claude" else [], usage_file=USAGE, **opts)
+                       fallback=[] if fallback is False else fallback_chain(kind, cfg),
+                       usage_file=USAGE, **opts)
         except sq.WorkerError as e:
             raise RuntimeError(str(e)) from e
         return r.text

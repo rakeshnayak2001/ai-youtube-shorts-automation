@@ -32,8 +32,9 @@ generate.py (claude -p writes script.json: style, characters, shots) -> film.py 
 - In chat sessions, the `local-worker` MCP server (`tools/local_worker_mcp.py`, `.mcp.json`) gives you
   `worker_generate`, `worker_generate_to_file`, `worker_batch`. Use them for bulk/boring text (topic lists, rewording,
   reformatting); test the instruction on one item first, spot-check results, never trust it for facts.
-- **Gemini worker** (optional): task value `gemini` / `gemini:<model>` calls the Gemini API with up to two Google AI Studio keys
-  (failover on 429), through the separate **agent-squad** repo (found when pip-installed, at `llm.squad_path`, or at
+- **Gemini worker** (optional): task value `gemini` / `gemini:<model>`. `llm.gemini.backend`: `agy` (default; the user's
+  Google AI Pro plan via Antigravity CLI, one account, model `agy_model`) or `api` (AI Studio keys, two-key failover).
+  On quota/failure: `llm.worker_fallback` (local) then Claude. Runs through the separate **agent-squad** repo (found when pip-installed, at `llm.squad_path`, or at
   `../agent-squad`). Without agent-squad the app still works and Gemini tasks fall back to Claude. MCP tools take `worker="gemini"`.
 - If the worker is down, `llm.fallback_to_claude` sends its tasks to Claude.
 - Dashboard: `python dashboard/server.py` (or `dashboard.bat`) -> http://127.0.0.1:8765. Worker setup: `setup_local_llm.bat`.

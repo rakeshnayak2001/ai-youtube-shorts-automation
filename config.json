@@ -131,7 +131,7 @@
     "region": "India"
   },
   "llm": {
-    "note": "Claude = master (scripts, fact-checks, timely topics). Workers = repetitive jobs: local Ollama model (free) or Gemini on Google AI Pro accounts (needs agent-squad). Task values: claude, claude:<sonnet|opus|haiku>, local, local:<ollama model>, gemini, gemini:<model>.",
+    "note": "Claude = master (scripts, fact-checks, timely topics). Workers = repetitive jobs: local Ollama model (free) or Gemini (needs agent-squad; backend agy = Google AI Pro plan via Antigravity CLI, api = AI Studio keys). If a worker fails or runs out of quota: worker_fallback (local), then Claude if fallback_to_claude. Task values: claude, claude:<sonnet|opus|haiku>, local, local:<ollama model>, gemini, gemini:<model>.",
     "master": {
       "model": ""
     },
@@ -142,7 +142,9 @@
       "timeout": 600
     },
     "gemini": {
+      "backend": "agy",
       "model": "gemini-3-pro-preview",
+      "agy_model": "",
       "rotation": "failover"
     },
     "tasks": {
@@ -152,6 +154,9 @@
       "ideas": "local"
     },
     "fallback_to_claude": true,
-    "squad_path": ""
+    "squad_path": "",
+    "worker_fallback": [
+      "local"
+    ]
   }
 }
