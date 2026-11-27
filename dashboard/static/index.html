@@ -276,7 +276,7 @@ select option{background:#14131c}
         <div class="card">
           <h2>Tokens · last 30 days</h2>
           <div class="spread"><div><div class="muted" style="font-size:12px">Claude (master)</div><div style="font-size:22px;font-weight:700" id="u-claude">0</div></div>
-            <div style="text-align:center"><div class="muted" style="font-size:12px">Gemini (worker, API)</div><div style="font-size:22px;font-weight:700;color:#9fc0ff" id="u-gemini">0</div></div>
+            <div style="text-align:center"><div class="muted" style="font-size:12px">Gemini (worker)</div><div style="font-size:22px;font-weight:700;color:#9fc0ff" id="u-gemini">0</div></div>
             <div style="text-align:right"><div class="muted" style="font-size:12px">Local (worker, free)</div><div style="font-size:22px;font-weight:700;color:#c4bbff" id="u-local">0</div></div></div>
           <div class="meter" style="margin:14px 0 8px"><i id="m-claude" style="width:0;background:linear-gradient(90deg,#d9902f,#E9B44C)"></i><i id="m-gemini" style="width:0;background:linear-gradient(90deg,#3b6fe0,#7aa7ff)"></i><i id="m-local" style="width:0;background:linear-gradient(90deg,#8b7cf6,#b8a8ff)"></i></div>
           <div class="muted" style="font-size:12px" id="u-share">No calls yet.</div>
@@ -313,7 +313,7 @@ select option{background:#14131c}
 
     <!-- MODELS -->
     <section class="page" id="p-models">
-      <h1>Models</h1><p class="sub">Claude is the <b>master</b> (planning, scripts, fact-checks). <b>Workers</b> do the repetitive jobs: a local Ollama model (free and private) or Gemini through your Google AI Studio API keys.</p>
+      <h1>Models</h1><p class="sub">Claude is the <b>master</b> (planning, scripts, fact-checks). <b>Workers</b> do the repetitive jobs: a local Ollama model (free and private) or Gemini (your Google AI Pro plan through Antigravity, or AI Studio API keys).</p>
       <div class="grid g2 stagger">
         <div class="card">
           <div class="spread"><h2 style="margin:0">Master · Claude Code</h2><span class="badge" id="mClaudeBadge">…</span></div>
@@ -342,10 +342,12 @@ select option{background:#14131c}
         <div class="spread"><h2 style="margin:0">Worker · Gemini</h2><span class="badge" id="mGemBadge">…</span></div>
         <p class="muted" style="font-size:12.5px" id="mGemHelp">Checking…</p>
         <div id="gemOn">
+          <label class="f"><span>Runs on</span><div class="seg blue" id="segGemB"><div class="thumb"></div>
+            <button data-v="agy">My Google AI Pro plan (Antigravity)</button><button data-v="api">AI Studio API keys</button></div></label>
           <div class="grid g2" style="gap:10px">
             <label class="f"><span>Model</span><input class="in" id="mGemModel" placeholder="gemini-3-pro-preview" list="gemModels"></label>
             <datalist id="gemModels"><option>gemini-3-pro-preview</option><option>gemini-3-flash-preview</option><option>gemini-2.5-pro</option></datalist>
-            <label class="f"><span>When a key hits its limit</span><div class="seg" id="segRot"><div class="thumb"></div>
+            <label class="f"><span id="rotLbl">When a key hits its limit</span><div class="seg" id="segRot"><div class="thumb"></div>
               <button data-v="failover">Switch to the next (failover)</button><button data-v="round_robin">Take turns</button></div></label>
           </div>
           <div id="gemAccts" style="margin-top:6px"></div>
@@ -520,15 +522,23 @@ async function renderModels(){CFG=await api('/api/config');if(!S.llm)await refre
   $('#mTemp').value=w.temperature??0.3;$('#tVal').textContent=$('#mTemp').value;$('#mUrl').value=w.url||'http://localhost:11434';
   $('#pullChips').innerHTML=['qwen3:4b','qwen3:8b','qwen3:14b','gemma3:12b','llama3.2:3b'].map(m=>`<button class="chip" onclick="$('#mPull').value='${m}'">${m}</button>`).join('');
   const G=S.llm.gemini||{},gcfg=L.gemini||{};
-  $('#mGemBadge').textContent=!G.available?'agent-squad not installed':G.backend!=='cli'?((G.accounts||[]).some(x=>x.signed_in)?'API key saved':'no API key yet'):G.up?'CLI found':'gemini CLI missing';$('#mGemBadge').className='badge '+(G.available&&G.up?'ok':'bad');
+  const B=G.backend||'api',isApi=B==='api',isAgy=B==='agy',acc=G.accounts||[];
+  $('#mGemBadge').textContent=!G.available?'agent-squad not installed':isAgy?(!G.up?'agy not installed':acc.some(x=>x.signed_in)?'Pro plan · signed in':'Pro plan · sign in needed'):
+    isApi?(acc.some(x=>x.signed_in)?'API key saved':'no API key yet'):G.up?'CLI found':'gemini CLI missing';
+  $('#mGemBadge').className='badge '+(G.available&&G.up&&acc.some(x=>x.signed_in)?'ok':G.available&&G.up?'gold':'bad');
+  const where=S.llm.squad&&S.llm.squad.path?` at <span class="mono">${esc(S.llm.squad.path)}</span>`:'';
   $('#mGemHelp').innerHTML=!G.available?esc(G.help||'Install agent-squad to use Gemini.'):
-    (G.backend==='cli'?`Runs a Gemini CLI headless`:`Calls the Gemini API with your Google AI Studio keys (one per slot; get one at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>)`)+
-    `, through agent-squad${S.llm.squad&&S.llm.squad.path?` at <span class="mono">${esc(S.llm.squad.path)}</span>`:''}.`+(G.up?'':` Install the CLI: <span class="mono">${esc(G.help||'npm install -g @google/gemini-cli')}</span>`);
-  const isApi=G.backend!=='cli';
+    isAgy?`Uses your Google AI Pro plan through Google's Antigravity CLI (<span class="mono">agy</span>), one Pro account at a time, through agent-squad${where}. When the plan's quota runs out, tasks fall back to the local model, then Claude. Google hasn't clearly said whether scripted use on a consumer plan is allowed, so keep it light.`+(G.up?'':` Install: <span class="mono">${esc(G.help||'')}</span>`):
+    isApi?`Calls the Gemini API with your Google AI Studio keys (one per slot; get one at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>), through agent-squad${where}. Billed by AI Studio, not your Pro plan.`:
+    `Runs a Gemini CLI headless, through agent-squad${where}.`+(G.up?'':` Install: <span class="mono">${esc(G.help||'')}</span>`);
   $('#gemOn').style.display=G.available?'':'none';
-  $('#mGemModel').value=gcfg.model||G.model||'gemini-3-pro-preview';segSet('segRot',gcfg.rotation||G.rotation||'failover');
-  $('#gemAccts').innerHTML=(G.accounts||[]).map(a=>{const st=a.cooldown_until?['warn',`cooling down until ${new Date(a.cooldown_until).toLocaleString()}`]:
-      a.needs_login||!a.signed_in?['bad',isApi?(a.signed_in?'key rejected':'no key yet'):'not signed in']:['ok','ready'];
+  segSet('segGemB',isAgy?'agy':'api');$('#rotLbl').textContent=isAgy?'When the plan hits its limit':'When a key hits its limit';
+  $('#mGemModel').value=isAgy?(gcfg.agy_model||''):(gcfg.model||G.model||'gemini-3-pro-preview');
+  $('#mGemModel').placeholder=isAgy?'empty = agy default (e.g. gemini-3.1-pro-high)':'gemini-3-pro-preview';
+  segSet('segRot',gcfg.rotation||G.rotation||'failover');
+  $('#gemAccts').innerHTML=acc.map(a=>{const st=a.cooldown_until?['warn',`quota used up, back at ${new Date(a.cooldown_until).toLocaleString()}`]:
+      a.needs_login||a.signed_in===false?['bad',isApi?(a.signed_in?'key rejected':'no key yet'):'not signed in']:
+      a.signed_in==null?['warn','not checked yet: sign in, then Test Gemini']:['ok','ready'];
     return `<div class="acct"><span class="dot ${st[0]}"></span><div><b>${esc(a.label||a.name)}</b> <span class="mono muted">${esc(a.name)}</span>
       <small>${st[1]} · ${a.calls_today||0} call(s) today${a.last_error&&st[0]!=='ok'?' · '+esc(a.last_error.slice(0,90)):''}</small></div>
       <button class="btn sm" onclick="gemLogin('${esc(a.name)}')">${isApi?(a.signed_in?'Replace key':'Add key'):(a.signed_in?'Sign in again':'Sign in')}</button></div>`}).join('');
@@ -542,10 +552,15 @@ $('#mTemp').oninput=e=>$('#tVal').textContent=e.target.value;
 async function saveModels(){const tasks={};Object.keys(TASKS).forEach(k=>tasks[k]=segVal('r-'+k));
   try{await api('/api/config/patch',{set:{'llm.master.model':segVal('segMaster'),'claude.model':segVal('segMaster'),'claude.allow_web_search':$('#mWeb').checked,
     'llm.fallback_to_claude':$('#mFallback').checked,'llm.worker.model':$('#mWorkerModel').value,'llm.worker.temperature':+$('#mTemp').value,'llm.worker.url':$('#mUrl').value.trim(),'llm.tasks':tasks,
-    ...((S.llm.gemini||{}).available?{'llm.gemini.model':$('#mGemModel').value.trim()||'gemini-3-pro-preview','llm.gemini.rotation':segVal('segRot')||'failover'}:{})}});
-    toast('Model settings saved','ok');refresh();}catch(e){toast(e.message,'bad');}}
+    ...gemSave()}});
+    toast('Model settings saved','ok');await refresh();renderModels();}catch(e){toast(e.message,'bad');}}
+function gemSave(){const G=S.llm.gemini||{};if(!G.available)return {};const was=G.backend||'api',now=segVal('segGemB')||was,m=$('#mGemModel').value.trim();
+  const o={'llm.gemini.backend':now,'llm.gemini.rotation':segVal('segRot')||'failover'};
+  if(now===was){if(was==='agy')o['llm.gemini.agy_model']=m;else o['llm.gemini.model']=m||'gemini-3-pro-preview';}
+  return o;}
 async function gemLogin(name){try{const r=await api('/api/gemini/login',{account:name});
-  toast(r.ok?((S.llm.gemini||{}).backend==='cli'?'A sign-in window opened. Finish the sign-in, then type /quit':'A window opened: paste your API key there and press Enter, then refresh this page'):`Run this in a terminal: ${r.command}`,'ok');}catch(e){toast(e.message,'bad');}}
+  const b=(S.llm.gemini||{}).backend;
+  toast(r.ok?(b==='api'?'A window opened: paste your API key there and press Enter, then refresh this page':'A window opened: sign in with your Google AI Pro account in the browser, then type /quit there'):`Run this in a terminal: ${r.command}`,'ok');}catch(e){toast(e.message,'bad');}}
 function pullModel(){const m=$('#mPull').value.trim();if(!m)return toast('Type a model name','bad');run({action:'pull_model',model:m});}
 
 /* ---------- topics ---------- */

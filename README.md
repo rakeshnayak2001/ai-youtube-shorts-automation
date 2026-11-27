@@ -112,7 +112,7 @@ Approve it the first time Claude Code asks. Usage per day is logged in `state\ll
 
 ### Gemini as a worker (optional, via agent-squad)
 
-Gemini (through Google AI Studio API keys) can take any task too (set it to `gemini` in `llm.tasks` or on the dashboard's
+Gemini (on your Google AI Pro plan through Antigravity CLI, or with AI Studio API keys) can take any task too (set it to `gemini` in `llm.tasks` or on the dashboard's
 Models page). It runs through **[agent-squad](https://github.com/rakeshnayak2001/agent-squad)**, a separate repo that
 holds the worker interface (Claude master; local, Gemini and later Codex workers). This app works without it; with it:
 
@@ -120,7 +120,10 @@ holds the worker interface (Claude master; local, Gemini and later Codex workers
 git clone https://github.com/rakeshnayak2001/agent-squad "C:\AI Vid\agent-squad"
 "C:\AI Vid\agent-squad\setup.bat"
 ```
-`setup.bat` installs agent-squad and asks for one or two Gemini API keys from https://aistudio.google.com/apikey (slots `acc1`, `acc2`;
+For the **Pro plan** route run `setup_pro.bat` instead: it installs Google's Antigravity CLI (`agy`) and opens the sign-in
+for one Pro account (`llm.gemini.backend: "agy"`, the default). When the plan's quota runs out, Gemini tasks fall back to the
+local model (`llm.worker_fallback`), then Claude. Google hasn't clearly said whether scripted use of agy on a consumer plan
+is allowed, so keep it light. For the API route, `setup.bat` installs agent-squad and asks for one or two Gemini API keys from https://aistudio.google.com/apikey (slots `acc1`, `acc2`;
 keys from two Google accounts give two quotas). Or add them later with **Add key** on the dashboard's Models page.
 Gemini CLI no longer accepts Google AI Pro sign-ins, so the API key is the supported route; API use is billed by AI Studio
 (free tier first), not covered by the Pro subscription.
