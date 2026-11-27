@@ -8,11 +8,10 @@ Uses your existing Claude Code login (subscription) — no API key needed.
 import argparse
 import json
 import re
-import subprocess
 import sys
 
 from common import (ROOT, add_history, channel_for, load_config, load_history, next_idea, slugify,
-                    video_dir, which, write_json)
+                    video_dir, write_json)
 
 SCENE_TYPES = {
     "hook": ["heading"],
@@ -213,26 +212,28 @@ def validate(data: dict) -> None:
         raise ValueError("title longer than 100 characters")
 
 
-def ask_claude(prompt: str, cfg: dict) -> str:
-    cmd = [which("claude"), "-p", "--output-format", "json"]
-    if cfg["claude"].get("allow_web_search", True):
-        cmd += ["--allowedTools", "WebSearch,WebFetch"]
-    if cfg["claude"].get("model"):
-        cmd += ["--model", cfg["claude"]["model"]]
-    print("  asking Claude Code for a script...")
-    res = subprocess.run(cmd, input=prompt, capture_output=True, text=True,
-                         encoding="utf-8", timeout=900)
-    if res.returncode != 0:
-        raise RuntimeError(f"claude exited {res.returncode}: {res.stderr[-800:]}")
+def ask_claude(prompt: str, cfg: dict, task: str = "script") -> str:
+    """Kept for compatibility: routes through scripts/llm.py (Claude master or local worker)."""
+    import llm
+    return llm.ask(task, prompt, cfg)
+
+
+def repair_json(reply: str, error: str, checker, cfg: dict) -> dict | None:
+    """Ask the worker to fix an invalid reply instead of paying for a whole new Claude script."""
+    import llm
+    if llm.route("json_repair", cfg)[0] != "local":
+        return None
+    prompt = (f"The JSON below is invalid. Error: {error}\n"
+              "Fix ONLY what the error describes. Keep every other field and all wording exactly the same. "
+              "Output only the corrected JSON object.\n\n" + reply[:30000])
     try:
-        outer = json.loads(res.stdout)
-    except json.JSONDecodeError:
-        return res.stdout
-    if outer.get("is_error"):
-        raise SystemExit(
-            f"Claude Code returned an error: {outer.get('result')}\n"
-            "Open a terminal, run `claude`, make sure you're logged in, then try again.")
-    return outer.get("result", res.stdout)
+        fixed = extract_json(llm.ask_local(prompt, cfg, "json_repair", json_mode=True, temperature=0))
+        checker(fixed)
+        print("  worker repaired the JSON (no extra Claude call)")
+        return fixed
+    except Exception as e:  # noqa: BLE001
+        print(f"  worker could not repair it ({str(e)[:120]}); asking Claude again")
+        return None
 
 
 def generate(topic: str | None = None, fmt: str | None = None, plan: dict | None = None) -> str:
@@ -268,6 +269,9 @@ def generate(topic: str | None = None, fmt: str | None = None, plan: dict | None
         except Exception as e:  # noqa: BLE001
             error = str(e)
             print(f"  attempt {attempt + 1} invalid: {error}")
+            data = repair_json(reply, error, checker, cfg)
+            if data:
+                break
     else:
         raise SystemExit(f"Claude did not return a valid script: {error}")
 

@@ -24,6 +24,17 @@ generate.py (claude -p writes script.json: style, characters, shots) -> film.py 
 - **Timely topics**: `scripts/topics.py plan <format>` (claude -p + web search for upcoming festivals/events) feeds
   `generate(topic, fmt, plan)`, which adds the event angle and keywords to the script prompt.
 
+## Master / worker models (token saving)
+- **Claude = master**: scripts, fact-checks, timely topics (web search), decisions, review.
+- **Local Ollama model = worker**: repetitive jobs. Routed per task in `config.json -> llm.tasks`
+  (`script`, `topic_plan`, `json_repair`, `ideas`; values `claude`, `claude:<model>`, `local`, `local:<model>`).
+  All pipeline LLM calls go through `scripts/llm.py` (`llm.ask(task, prompt)`); usage is logged to `state/llm_usage.json`.
+- In chat sessions, the `local-worker` MCP server (`tools/local_worker_mcp.py`, `.mcp.json`) gives you
+  `worker_generate`, `worker_generate_to_file`, `worker_batch`. Use them for bulk/boring text (topic lists, rewording,
+  reformatting); test the instruction on one item first, spot-check results, never trust it for facts.
+- If the worker is down, `llm.fallback_to_claude` sends its tasks to Claude.
+- Dashboard: `python dashboard/server.py` (or `dashboard.bat`) -> http://127.0.0.1:8765. Worker setup: `setup_local_llm.bat`.
+
 ## Stickman pipeline
 
 A faceless channel pipeline. Every video stars the same stick figure (Tiko) and answers one
@@ -42,6 +53,8 @@ ideas.csv -> generate.py (claude -p writes script.json) -> tts.py (edge-tts voic
 - `/add-asset <thing>`: draw a new setting/pose/prop and register it in the catalogue.
 
 ## Files
+- `scripts/llm.py`: model router (Claude master / local worker). `scripts/ideas.py <format> --n N`: worker brainstorms topics.
+- `dashboard/`: local control-room UI (stdlib server + one HTML file).
 - `run.py`: `--daily-start` / `--daily-finish` (scheduled), or manual `--slug S`, `--topic T --format F`, `--no-upload`, `--no-plan`
 - `config.json`: channel niche/audience/CTA, `video.format` ("stickman" or "facts"), voice, character look, upload settings.
 - `scripts/generate.py`: prompts + validation. Story prompt = `build_story_prompt`.

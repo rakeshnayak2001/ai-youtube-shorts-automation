@@ -54,7 +54,7 @@ def plan(fmt: str, use_claude: bool = True) -> dict:
         return fallback
     from generate import ask_claude, extract_json
     try:
-        data = extract_json(ask_claude(plan_prompt(cfg, fmt), cfg))
+        data = extract_json(ask_claude(plan_prompt(cfg, fmt), cfg, "topic_plan"))
         if not data.get("topic"):
             raise ValueError("no topic")
     except BaseException as e:  # noqa: BLE001 (SystemExit from ask_claude included)
