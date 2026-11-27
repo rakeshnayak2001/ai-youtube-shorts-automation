@@ -93,19 +93,21 @@ Double-click **`dashboard.bat`** (or `python dashboard\server.py`) and it opens 
 
 It only listens on your own PC (127.0.0.1) and needs nothing beyond Python.
 
-## Claude master + local worker (saves tokens)
+## Claude master + workers (saves tokens)
 
 Claude does the work that needs judgement: writing and fact-checking scripts, and planning timely topics with web search.
-A free local model running in [Ollama](https://ollama.com) does the repetitive work:
+A worker does the repetitive work. **Gemini is the default worker** (see below). A free local model running in
+[Ollama](https://ollama.com) can be used too, but it is **off until you switch it on** (dashboard: Models > "Use local model",
+or `"llm": {"local_enabled": true}`). While it is off, nothing runs on it, not even as a fallback; tasks set to `local` go to Gemini.
 
 | Task (`config.json -> llm.tasks`) | Default | Why |
 |---|---|---|
 | `script` | `claude` | accuracy + web search |
 | `topic_plan` | `claude` | searches upcoming festivals/events |
-| `json_repair` | `local` | fixes a malformed script instead of paying for a whole new Claude call |
-| `ideas` | `local` | brainstorms topic lists (`python scripts\ideas.py cinematic --n 15`) |
+| `json_repair` | `gemini` | fixes a malformed script instead of paying for a whole new Claude call |
+| `ideas` | `gemini` | brainstorms topic lists (`python scripts\ideas.py cinematic --n 15`) |
 
-Setup: double-click **`setup_local_llm.bat`**. It installs Ollama, downloads `llm.worker.model` (default `qwen3:8b`, ~5 GB, needs about 8 GB of VRAM; use `qwen3:4b` on smaller GPUs) and runs a test.
+Local model setup (optional): double-click **`setup_local_llm.bat`**, then switch on "Use local model". It installs Ollama, downloads `llm.worker.model` (default `qwen3:8b`, ~5 GB, needs about 8 GB of VRAM; use `qwen3:4b` on smaller GPUs) and runs a test.
 If the worker is offline, its tasks fall back to Claude (`llm.fallback_to_claude`).
 Claude Code chat sessions also get a **`local-worker` MCP server** (`.mcp.json`), so commands like `/new-topics` can hand bulk text to the worker.
 Approve it the first time Claude Code asks. Usage per day is logged in `state\llm_usage.json` and shown on the dashboard.
@@ -122,7 +124,7 @@ git clone https://github.com/rakeshnayak2001/agent-squad "C:\AI Vid\agent-squad"
 ```
 For the **Pro plan** route run `setup_pro.bat` instead: it installs Google's Antigravity CLI (`agy`) and opens the sign-in
 for one Pro account (`llm.gemini.backend: "agy"`, the default). When the plan's quota runs out, Gemini tasks fall back to the
-local model (`llm.worker_fallback`), then Claude. Google hasn't clearly said whether scripted use of agy on a consumer plan
+local model if it is switched on (`llm.worker_fallback`), then Claude. Google hasn't clearly said whether scripted use of agy on a consumer plan
 is allowed, so keep it light. For the API route, `setup.bat` installs agent-squad and asks for one or two Gemini API keys from https://aistudio.google.com/apikey (slots `acc1`, `acc2`;
 keys from two Google accounts give two quotas). Or add them later with **Add key** on the dashboard's Models page.
 Gemini CLI no longer accepts Google AI Pro sign-ins, so the API key is the supported route; API use is billed by AI Studio

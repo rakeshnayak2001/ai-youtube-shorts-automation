@@ -238,7 +238,7 @@ select option{background:#14131c}
     </nav>
     <div class="side-foot">
       <div class="row"><span>Master</span><span id="sf-claude" class="row"><span class="dot"></span>…</span></div>
-      <div class="row"><span>Worker</span><span id="sf-worker" class="row"><span class="dot"></span>…</span></div>
+      <div class="row"><span>Local</span><span id="sf-worker" class="row"><span class="dot"></span>…</span></div>
       <div class="row"><span>Gemini</span><span id="sf-gemini" class="row"><span class="dot"></span>…</span></div>
       <div class="row"><span>Job</span><span id="sf-job" class="row"><span class="dot"></span>idle</span></div>
     </div>
@@ -313,7 +313,7 @@ select option{background:#14131c}
 
     <!-- MODELS -->
     <section class="page" id="p-models">
-      <h1>Models</h1><p class="sub">Claude is the <b>master</b> (planning, scripts, fact-checks). <b>Workers</b> do the repetitive jobs: a local Ollama model (free and private) or Gemini (your Google AI Pro plan through Antigravity, or AI Studio API keys).</p>
+      <h1>Models</h1><p class="sub">Claude is the <b>master</b> (planning, scripts, fact-checks). <b>Workers</b> do the repetitive jobs: Gemini by default (your Google AI Pro plan through Antigravity, or AI Studio API keys), or a local Ollama model (free and private) once you switch it on.</p>
       <div class="grid g2 stagger">
         <div class="card">
           <div class="spread"><h2 style="margin:0">Master · Claude Code</h2><span class="badge" id="mClaudeBadge">…</span></div>
@@ -326,7 +326,9 @@ select option{background:#14131c}
         </div>
         <div class="card">
           <div class="spread"><h2 style="margin:0">Worker · Ollama</h2><span class="badge" id="mOllamaBadge">…</span></div>
+          <label class="tg"><div>Use local model<small>Off: nothing runs on Ollama, not even as a fallback. Gemini is the worker.</small></div><input type="checkbox" id="mLocalOn"><span class="sw"></span></label>
           <p class="muted" style="font-size:12.5px" id="mOllamaHelp">Checking…</p>
+          <div id="localOn">
           <label class="f"><span>Model</span><select id="mWorkerModel"></select></label>
           <div class="grid g2" style="gap:10px">
             <label class="f"><span>Temperature <b id="tVal"></b></span><input type="range" min="0" max="1" step="0.05" id="mTemp" style="width:100%;accent-color:#8b7cf6"></label>
@@ -336,6 +338,7 @@ select option{background:#14131c}
             <button class="btn sm" onclick="pullModel()">Pull</button></div></label>
           <div class="chips" id="pullChips"></div>
           <div class="row" style="margin-top:14px"><button class="btn sm" onclick="run({action:'test_worker'})">Test worker</button></div>
+          </div>
         </div>
       </div>
       <div class="card" style="margin-top:16px" id="geminiCard">
@@ -464,13 +467,14 @@ async function refresh(){
   $('#greet').textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening');
   $('#todayLine').textContent=S.today?`Today's video is done: ${S.today.slug} (${S.today.format}).`:`No video yet today. Daily runs at 2:00 PM and 4:30 PM.`;
   $('#st-format').textContent=S.format; $('#st-format-d').textContent=S.format==='cinematic'?'falls back to stickman if credits run out':'';
-  $('#st-worker').textContent=o.up?o.model:'offline'; $('#st-worker-d').textContent=o.up?(o.model_ready?`${o.models.length} model(s) installed`:'model not pulled yet'):(S.ollama_installed?'run: ollama serve':'Ollama not installed');
-  $('#st-w-dot').className='dot '+(o.up&&o.model_ready?'ok':o.up?'warn':'bad');
+  const lOff=o.enabled===false;
+  $('#st-worker').textContent=lOff?'off':o.up?o.model:'offline'; $('#st-worker-d').textContent=lOff?'switch it on in Models':o.up?(o.model_ready?`${o.models.length} model(s) installed`:'model not pulled yet'):(S.ollama_installed?'run: ollama serve':'Ollama not installed');
+  $('#st-w-dot').className='dot '+(lOff?'':o.up&&o.model_ready?'ok':o.up?'warn':'bad');
   $('#st-queue').textContent=`${S.queues.cinematic} · ${S.queues.stickman}`;
   const cr=Object.entries(S.credits||{});$('#st-credits').textContent=cr.length?cr.map(([,v])=>v??'?').join(' · '):'—';
   $('#st-credits-d').textContent=cr.length?`${cr.length} account(s), a film needs ~${S.film_cost}`:'not tracked yet';
   $('#sf-claude').innerHTML=`<span class="dot ${L.claude_cli?'ok':'bad'}"></span>${L.routes.script[1]||'default'}`;
-  $('#sf-worker').innerHTML=`<span class="dot ${o.up&&o.model_ready?'ok':o.up?'warn':'bad'}"></span>${o.up?esc(o.model):'offline'}`;
+  $('#sf-worker').innerHTML=lOff?'<span class="dot"></span>off':`<span class="dot ${o.up&&o.model_ready?'ok':o.up?'warn':'bad'}"></span>${o.up?esc(o.model):'offline'}`;
   const G=L.gemini||{},ga=G.accounts||[],gReady=ga.filter(a=>a.signed_in&&!a.cooldown_until).length;
   $('#sf-gemini').innerHTML=!G.available?'<span class="dot"></span>not installed':`<span class="dot ${G.up&&gReady?'ok':G.up&&ga.length?'warn':'bad'}"></span>${G.up?`${gReady}/${ga.length} ready`:'CLI missing'}`;
   const u=S.usage||{},c=u.claude||{},l=u.local||{},g=u.gemini||{},tk=b=>(b.tokens_in||0)+(b.tokens_out||0),ct=tk(c),lt=tk(l),gt=tk(g);
@@ -516,8 +520,9 @@ const TASKS={script:['Write the script','Needs accuracy + web search. Keep on Cl
 async function renderModels(){CFG=await api('/api/config');if(!S.llm)await refresh();const L=CFG.llm||{},w=L.worker||{},o=S.llm.ollama;
   segSet('segMaster',(L.master||{}).model??(CFG.claude||{}).model??'');$('#mWeb').checked=(CFG.claude||{}).allow_web_search!==false;$('#mFallback').checked=L.fallback_to_claude!==false;
   $('#mClaudeBadge').textContent=S.llm.claude_cli?'claude CLI found':'claude CLI missing';$('#mClaudeBadge').className='badge '+(S.llm.claude_cli?'ok':'bad');
-  $('#mOllamaBadge').textContent=o.up?'running':'offline';$('#mOllamaBadge').className='badge '+(o.up?'ok':'bad');
-  $('#mOllamaHelp').innerHTML=o.up?`${o.models.length} model(s) at <span class="mono">${esc(o.url)}</span>`:S.ollama_installed?'Ollama is installed but not running. Start it from the Start menu or run <span class="mono">ollama serve</span>.':'Ollama is not installed. Run <span class="mono">setup_local_llm.bat</span> or install from ollama.com.';
+  const lOn=L.local_enabled===true;$('#mLocalOn').checked=lOn;$('#localOn').style.display=lOn?'':'none';
+  $('#mOllamaBadge').textContent=!lOn?'off':o.up?'running':'offline';$('#mOllamaBadge').className='badge '+(!lOn?'':o.up?'ok':'bad');
+  $('#mOllamaHelp').innerHTML=!lOn?'Switched off. Turn it on, then Save, to use your Ollama model for tasks and as a fallback when Gemini runs out.':o.up?`${o.models.length} model(s) at <span class="mono">${esc(o.url)}</span>`:S.ollama_installed?'Ollama is installed but not running. Start it from the Start menu or run <span class="mono">ollama serve</span>.':'Ollama is not installed. Run <span class="mono">setup_local_llm.bat</span> or install from ollama.com.';
   const models=[...new Set([...(o.models||[]),w.model||'qwen3:8b'])];$('#mWorkerModel').innerHTML=models.map(m=>`<option ${m===w.model?'selected':''}>${esc(m)}</option>`).join('');
   $('#mTemp').value=w.temperature??0.3;$('#tVal').textContent=$('#mTemp').value;$('#mUrl').value=w.url||'http://localhost:11434';
   $('#pullChips').innerHTML=['qwen3:4b','qwen3:8b','qwen3:14b','gemma3:12b','llama3.2:3b'].map(m=>`<button class="chip" onclick="$('#mPull').value='${m}'">${m}</button>`).join('');
@@ -528,7 +533,7 @@ async function renderModels(){CFG=await api('/api/config');if(!S.llm)await refre
   $('#mGemBadge').className='badge '+(G.available&&G.up&&acc.some(x=>x.signed_in)?'ok':G.available&&G.up?'gold':'bad');
   const where=S.llm.squad&&S.llm.squad.path?` at <span class="mono">${esc(S.llm.squad.path)}</span>`:'';
   $('#mGemHelp').innerHTML=!G.available?esc(G.help||'Install agent-squad to use Gemini.'):
-    isAgy?`Uses your Google AI Pro plan through Google's Antigravity CLI (<span class="mono">agy</span>), one Pro account at a time, through agent-squad${where}. When the plan's quota runs out, tasks fall back to the local model, then Claude. Google hasn't clearly said whether scripted use on a consumer plan is allowed, so keep it light.`+(G.up?'':` Install: <span class="mono">${esc(G.help||'')}</span>`):
+    isAgy?`Uses your Google AI Pro plan through Google's Antigravity CLI (<span class="mono">agy</span>), one Pro account at a time, through agent-squad${where}. When the plan's quota runs out, tasks fall back to the local model (if switched on), then Claude. Google hasn't clearly said whether scripted use on a consumer plan is allowed, so keep it light.`+(G.up?'':` Install: <span class="mono">${esc(G.help||'')}</span>`):
     isApi?`Calls the Gemini API with your Google AI Studio keys (one per slot; get one at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>), through agent-squad${where}. Billed by AI Studio, not your Pro plan.`:
     `Runs a Gemini CLI headless, through agent-squad${where}.`+(G.up?'':` Install: <span class="mono">${esc(G.help||'')}</span>`);
   $('#gemOn').style.display=G.available?'':'none';
@@ -542,16 +547,20 @@ async function renderModels(){CFG=await api('/api/config');if(!S.llm)await refre
     return `<div class="acct"><span class="dot ${st[0]}"></span><div><b>${esc(a.label||a.name)}</b> <span class="mono muted">${esc(a.name)}</span>
       <small>${st[1]} · ${a.calls_today||0} call(s) today${a.last_error&&st[0]!=='ok'?' · '+esc(a.last_error.slice(0,90)):''}</small></div>
       <button class="btn sm" onclick="gemLogin('${esc(a.name)}')">${isApi?(a.signed_in?'Replace key':'Add key'):(a.signed_in?'Sign in again':'Sign in')}</button></div>`}).join('');
-  const tasks={...{script:'claude',topic_plan:'claude',json_repair:'local',ideas:'local'},...(L.tasks||{})};const gOk=!!G.available;
+  const tasks={...{script:'claude',topic_plan:'claude',json_repair:'gemini',ideas:'gemini'},...(L.tasks||{})};const gOk=!!G.available;
   const tint=v=>v==='local'?'violet':v==='gemini'?'blue':'';
-  $('#routes').innerHTML=Object.entries(TASKS).map(([k,[t,d]])=>{const v=(tasks[k]||'claude').split(':')[0];return `<div class="route"><div><b>${t}</b><small>${d}</small></div>
-    <div class="seg ${tint(v)}" id="r-${k}"><div class="thumb"></div><button data-v="claude" class="${v==='claude'?'on':''}">Claude</button><button data-v="local" class="${v==='local'?'on':''}">Local</button><button data-v="gemini" class="${v==='gemini'?'on':''}" ${gOk||v==='gemini'?'':'disabled title="Install agent-squad first"'}>Gemini</button></div></div>`}).join('');
+  $('#routes').innerHTML=Object.entries(TASKS).map(([k,[t,d]])=>{let v=(tasks[k]||'claude').split(':')[0];if(v==='local'&&!lOn)v='gemini';return `<div class="route"><div><b>${t}</b><small>${d}</small></div>
+    <div class="seg ${tint(v)}" id="r-${k}"><div class="thumb"></div><button data-v="claude" class="${v==='claude'?'on':''}">Claude</button><button data-v="local" class="${v==='local'?'on':''}" ${lOn?'':'disabled title="Switch on Use local model first"'}>Local</button><button data-v="gemini" class="${v==='gemini'?'on':''}" ${gOk||v==='gemini'?'':'disabled title="Install agent-squad first"'}>Gemini</button></div></div>`}).join('');
   Object.keys(TASKS).forEach(k=>{const seg=$('#r-'+k);seg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;segSet(seg.id,b.dataset.v);seg.classList.remove('violet','blue');const t=tint(b.dataset.v);if(t)seg.classList.add(t);});});
   requestAnimationFrame(()=>$$('.seg').forEach(placeThumb));}
 $('#mTemp').oninput=e=>$('#tVal').textContent=e.target.value;
+$('#mLocalOn').onchange=e=>{const on=e.target.checked;$('#localOn').style.display=on?'':'none';
+  Object.keys(TASKS).forEach(k=>{const seg=$('#r-'+k),b=seg&&seg.querySelector('button[data-v="local"]');if(!b)return;b.disabled=!on;b.title=on?'':'Switch on Use local model first';
+    if(!on&&segVal(seg.id)==='local'){segSet(seg.id,'gemini');seg.classList.remove('violet');seg.classList.add('blue');}});
+  requestAnimationFrame(()=>$$('.seg').forEach(placeThumb));};
 async function saveModels(){const tasks={};Object.keys(TASKS).forEach(k=>tasks[k]=segVal('r-'+k));
   try{await api('/api/config/patch',{set:{'llm.master.model':segVal('segMaster'),'claude.model':segVal('segMaster'),'claude.allow_web_search':$('#mWeb').checked,
-    'llm.fallback_to_claude':$('#mFallback').checked,'llm.worker.model':$('#mWorkerModel').value,'llm.worker.temperature':+$('#mTemp').value,'llm.worker.url':$('#mUrl').value.trim(),'llm.tasks':tasks,
+    'llm.fallback_to_claude':$('#mFallback').checked,'llm.local_enabled':$('#mLocalOn').checked,'llm.worker.model':$('#mWorkerModel').value,'llm.worker.temperature':+$('#mTemp').value,'llm.worker.url':$('#mUrl').value.trim(),'llm.tasks':tasks,
     ...gemSave()}});
     toast('Model settings saved','ok');await refresh();renderModels();}catch(e){toast(e.message,'bad');}}
 function gemSave(){const G=S.llm.gemini||{};if(!G.available)return {};const was=G.backend||'api',now=segVal('segGemB')||was,m=$('#mGemModel').value.trim();
